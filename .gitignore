@@ -34,3 +34,4 @@ build/
 .env
 /src/main/resources/application.properties
 /docs/
+SpringDocumentationAI.log

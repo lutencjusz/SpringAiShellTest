@@ -67,7 +67,7 @@ public class ReferenceDocsLoader {
             return reader.lines().collect(Collectors.joining("\n"));
         } catch (Exception e) {
             logger.info("Błąd przy pobieraniu zasobów jako String: ", e);
-            return "";
+            throw new RuntimeException(e);
         }
     }
 

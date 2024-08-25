@@ -1,6 +1,6 @@
 package com.example.SpringDocumentationAI;
 
-import org.springframework.ai.chat.ChatClient;
+import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
@@ -24,8 +24,8 @@ public class SpringAssistantService {
     private final ChatClient chatClient;
     private final VectorStore vectorStore;
 
-    public SpringAssistantService(ChatClient chatClient, VectorStore vectorStore) {
-        this.chatClient = chatClient;
+    public SpringAssistantService(ChatClient.Builder chatClientBuilder, VectorStore vectorStore) {
+        this.chatClient = chatClientBuilder.build();
         this.vectorStore = vectorStore;
     }
 
@@ -35,10 +35,9 @@ public class SpringAssistantService {
         promptParameters.put("input", question);
         promptParameters.put("documents", String.join("\n", findSimilarDocuments(question)));
 
-        return chatClient.call(promptTemplate.create(promptParameters))
-                .getResult()
-                .getOutput()
-                .getContent();
+        return chatClient.prompt(promptTemplate.create(promptParameters))
+                .call()
+                .content();
     }
 
     private List<String> findSimilarDocuments(String message) {

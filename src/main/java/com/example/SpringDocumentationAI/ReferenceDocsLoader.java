@@ -1,35 +1,38 @@
 package com.example.SpringDocumentationAI;
 
+import com.example.SpringDocumentationAI.readers.EpubDocumentContent;
+import com.example.SpringDocumentationAI.readers.PdfDocumentContent;
+import com.example.SpringDocumentationAI.readers.ReaderDocumentInterface;
 import jakarta.annotation.PostConstruct;
-import nl.siegmann.epublib.domain.Book;
 import nl.siegmann.epublib.domain.Resource;
-import nl.siegmann.epublib.epub.EpubReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.ai.document.Document;
-import org.springframework.ai.reader.ExtractedTextFormatter;
-import org.springframework.ai.reader.pdf.PagePdfDocumentReader;
-import org.springframework.ai.reader.pdf.config.PdfDocumentReaderConfig;
 import org.springframework.ai.transformer.splitter.TokenTextSplitter;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Component;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
 public class ReferenceDocsLoader {
 
+private static final String RESOURCE_AND_EXTENSION_CLASSPATH = "classpath:/docs/*.epub";
+
     private static final Logger logger = LoggerFactory.getLogger(ReferenceDocsLoader.class);
     private final JdbcClient jdbcClient;
     private final VectorStore vectorStore;
-
-//    @Value("classpath:/docs/spring-boot-reference.pdf")
-//    private org.springframework.core.io.Resource pdfResource;
+    ReaderDocumentInterface[] readersDocument = new ReaderDocumentInterface[]{
+            new EpubDocumentContent(),
+            new PdfDocumentContent()
+    };
 
     List<org.springframework.core.io.Resource> resources;
 
@@ -37,34 +40,11 @@ public class ReferenceDocsLoader {
         this.jdbcClient = jdbcClient;
         this.vectorStore = vectorStore;
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-        org.springframework.core.io.Resource[] resourcesTable = resolver.getResources("classpath:/docs/*.epub");
+        org.springframework.core.io.Resource[] resourcesTable = resolver.getResources(RESOURCE_AND_EXTENSION_CLASSPATH);
         this.resources = Arrays.asList(resourcesTable);
     }
 
-    private List<Document> getPdfDocumentContent(org.springframework.core.io.Resource pdfResource) {
-        var config = PdfDocumentReaderConfig.builder()
-                .withPageExtractedTextFormatter(new ExtractedTextFormatter.Builder()
-                        .withNumberOfBottomTextLinesToDelete(0)
-                        .withNumberOfTopPagesToSkipBeforeDelete(0)
-                        .build())
-                .withPagesPerDocument(1)
-                .build();
-        var pdfReader = new PagePdfDocumentReader(pdfResource, config);
-        return pdfReader.get();
-    }
-
-    private List<Document> getEpubDocumentContent(org.springframework.core.io.Resource epubResource) throws IOException {
-        InputStream epubInputStream = new FileInputStream(epubResource.getFile());
-        EpubReader epubReader = new EpubReader();
-        Book book = epubReader.readEpub(epubInputStream);
-
-        String text = book.getContents().stream()
-                .map(ReferenceDocsLoader::readResourceAsString)
-                .collect(Collectors.joining("\n"));
-        return List.of(new Document(text));
-    }
-
-    private static String readResourceAsString(Resource resource) {
+    public static String readResourceAsString(Resource resource) {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream(), resource.getInputEncoding()));
             return reader.lines().collect(Collectors.joining("\n"));
@@ -74,26 +54,32 @@ public class ReferenceDocsLoader {
         }
     }
 
-    @PostConstruct
-    public void init() {
-        Integer count = jdbcClient.sql("SELECT COUNT(*) FROM vector_store")
+    private int getCountVectorStore() {
+        return jdbcClient.sql("SELECT COUNT(*) FROM vector_store")
                 .query(Integer.class)
                 .single();
+    }
 
-        logger.info("Loaded {} vectors from the vector store", count);
+    @PostConstruct
+    public void init() {
+        int count = getCountVectorStore();
+        logger.info("Załadowano {} wektorów z bazy danych", count);
         if (count == 0) {
-            logger.info("Ładowanie wektorów z zasobów (recources)...");
+            logger.info("Ładowanie wektorów z zasobów (resources)...");
             var textSplitter = new TokenTextSplitter();
-//            vectorStore.accept(textSplitter.apply(getPdfDocumentContent(pdfResource)));
             resources.forEach(resource -> {
                 try {
-                    vectorStore.accept(textSplitter.apply(getEpubDocumentContent(resource)));
+                    for (ReaderDocumentInterface readerDocument : readersDocument){
+                        if (Objects.requireNonNull(resource.getFilename()).endsWith(readerDocument.getDocumentType())){
+                            vectorStore.accept(textSplitter.apply(readerDocument.getDocumentContent(resource)));
+                        }
+                    }
                 } catch (IOException e) {
                     logger.error("Błąd przy pobieraniu zasobów jako String: ", e);
                     throw new RuntimeException(e);
                 }
             });
-            logger.info("Ładowanie wektorów z zasobów zakończone");
+            logger.info("Ładowanie wektorów z zasobów zakończone, załadowano {} wektorów", getCountVectorStore());
         }
     }
 }

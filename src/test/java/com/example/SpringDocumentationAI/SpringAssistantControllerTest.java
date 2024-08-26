@@ -1,5 +1,7 @@
 package com.example.SpringDocumentationAI;
 
+import com.example.SpringDocumentationAI.model.DtoChatGptRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
@@ -15,12 +17,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 class SpringAssistantControllerTest {
 
     @LocalServerPort
     private int port;
+
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     MockMvc mockMvc;
@@ -33,12 +37,17 @@ class SpringAssistantControllerTest {
 
     @Test
     void shouldAnswerForQuestionFromChatGpt() throws Exception {
+        DtoChatGptRequest dtoChatGptRequest = new DtoChatGptRequest();
+        dtoChatGptRequest.setId("1");
+        dtoChatGptRequest.setQuestion("Czy kury są szczęśliwe?");
+        String answer = "Nie";
 
-        Mockito.when(springAssistantService.getChatGptAnswer("Czy kury są szczęśliwe?"))
-                .thenReturn("Nie");
+        Mockito.when(springAssistantService.getChatGptAnswer(dtoChatGptRequest.getQuestion()))
+                .thenReturn(answer);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/question")
-                        .content("{\"id\":\"1\",\"question\":\"Czy kury są szczęśliwe?\"}"))
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(dtoChatGptRequest)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string("Nie"));

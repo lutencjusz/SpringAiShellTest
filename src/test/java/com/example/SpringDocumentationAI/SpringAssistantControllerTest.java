@@ -34,7 +34,6 @@ class SpringAssistantControllerTest {
     @Test
     void shouldAnswerForQuestionFromChatGpt() throws Exception {
 
-
         Mockito.when(springAssistantService.getChatGptAnswer("Czy kury są szczęśliwe?"))
                 .thenReturn("Nie");
 

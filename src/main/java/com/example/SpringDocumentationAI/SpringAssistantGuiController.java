@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.logging.Logger;
 
 @Controller
@@ -46,10 +48,15 @@ public class SpringAssistantGuiController {
     @PostMapping("/api/chat")
     public HtmxResponse generate(@RequestParam String message, Model model) {
         logger.info("Otrzymany komunikat: " + message);
+        Instant startTime = Instant.now();
         String response = springAssistantService.getChatGptAnswer(message);
+        Instant endTime = Instant.now();// Zakończ mierzenie czasu
+        Duration duration = Duration.between(startTime, endTime);
+        long timeElapsed = duration.toMillis();
         logger.info("Odpowiedź: " + response);
         model.addAttribute("response", response);
         model.addAttribute("message", message);
+        model.addAttribute("timeElapsed", String.valueOf(timeElapsed));
         return HtmxResponse.builder()
                 .view("response :: responseFragment")
                 .view("recent-message-list :: messageFragment")

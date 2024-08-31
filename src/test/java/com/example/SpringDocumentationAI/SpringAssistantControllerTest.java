@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-class SpringAssistantController {
+class SpringAssistantControllerTest {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -29,7 +29,7 @@ class SpringAssistantController {
     private SpringAssistantService springAssistantService;
 
     @InjectMocks
-    private SpringAssistantController springAssistantController;
+    private SpringAssistantController springAssistantControllerTests;
 
     @Test
     void shouldAnswerForQuestionFromChatGpt() throws Exception {

@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Component
 public class ReferenceDocsLoader {
 
-private static final String RESOURCE_AND_EXTENSION_CLASSPATH = "classpath:/docs/*.epub";
+    private static final String RESOURCE_AND_EXTENSION_CLASSPATH = "classpath:/docs/*.*";
 
     private static final Logger logger = LoggerFactory.getLogger(ReferenceDocsLoader.class);
     private final JdbcClient jdbcClient;
@@ -63,23 +63,26 @@ private static final String RESOURCE_AND_EXTENSION_CLASSPATH = "classpath:/docs/
     @PostConstruct
     public void init() {
         int count = getCountVectorStore();
-        logger.info("Załadowano {} wektorów z bazy danych", count);
+        logger.info("Loaded {} chunks from DB", count);
         if (count == 0) {
-            logger.info("Ładowanie wektorów z zasobów (resources)...");
+            logger.info("Loading documents from resources...");
             var textSplitter = new TokenTextSplitter();
             resources.forEach(resource -> {
                 try {
-                    for (ReaderDocumentInterface readerDocument : readersDocument){
-                        if (Objects.requireNonNull(resource.getFilename()).endsWith(readerDocument.getDocumentType())){
+                    for (ReaderDocumentInterface readerDocument : readersDocument) {
+                        if (Objects.requireNonNull(resource.getFilename()).endsWith(readerDocument.getDocumentType())) {
                             vectorStore.accept(textSplitter.apply(readerDocument.getDocumentContent(resource)));
                         }
                     }
                 } catch (IOException e) {
-                    logger.error("Błąd przy pobieraniu zasobów jako String: ", e);
+                    logger.error("Error: ", e);
                     throw new RuntimeException(e);
                 }
+                logger.info("Splitted up from resource '{}'. For now, totally splitt up {} chunks", resource.getFilename(), getCountVectorStore());
             });
-            logger.info("Ładowanie wektorów z zasobów zakończone, załadowano {} wektorów", getCountVectorStore());
+            logger.info("Splitting up chanks has finished, splited up {} chunks", getCountVectorStore());
+        } else {
+            logger.info("Chanks already splited up, skipping split up from resources.");
         }
     }
 }

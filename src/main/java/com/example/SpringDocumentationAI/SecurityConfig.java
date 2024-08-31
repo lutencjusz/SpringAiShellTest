@@ -24,6 +24,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/api/chat/**", "/chat/**", "/question/**", "/swagger-ui/**", "/api-docs/**").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/").permitAll()
                         .anyRequest().denyAll()
                 )

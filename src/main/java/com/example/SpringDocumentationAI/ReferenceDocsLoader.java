@@ -82,7 +82,7 @@ public class ReferenceDocsLoader {
             });
             logger.info("Splitting up chanks has finished, splited up {} chunks", getCountVectorStore());
         } else {
-            logger.info("Chanks already splited up, skipping split up from resources.");
+            logger.info("Chanks already splited up, skipping load resources.");
         }
     }
 }

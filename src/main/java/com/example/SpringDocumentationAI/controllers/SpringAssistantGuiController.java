@@ -1,4 +1,4 @@
-package com.example.SpringDocumentationAI.controllers.chat;
+package com.example.SpringDocumentationAI.controllers;
 
 import com.example.SpringDocumentationAI.SpringAssistantService;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponse;

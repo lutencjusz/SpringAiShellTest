@@ -2,18 +2,18 @@ package com.example.SpringDocumentationAI;
 
 import com.example.SpringDocumentationAI.model.DtoChatGptRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -28,24 +28,22 @@ class SpringAssistantControllerTest {
     @MockBean
     private SpringAssistantService springAssistantService;
 
-    @InjectMocks
-    private SpringAssistantController springAssistantControllerTests;
-
     @Test
     void shouldAnswerForQuestionFromChatGpt() throws Exception {
         DtoChatGptRequest dtoChatGptRequest = new DtoChatGptRequest();
         dtoChatGptRequest.setId("1");
         dtoChatGptRequest.setQuestion("Czy kury są szczęśliwe?");
-        String answer = "Nie";
+        ResponseEntity<String> answer = ResponseEntity.ok("Nie");
 
         Mockito.when(springAssistantService.getChatGptAnswer(dtoChatGptRequest.getQuestion()))
-                .thenReturn(answer);
+                .thenReturn(String.valueOf(answer));
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/question")
+        String response = mockMvc.perform(MockMvcRequestBuilders.post("/question")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(dtoChatGptRequest)))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string("Nie"));
+                .andReturn().getResponse().getContentAsString();
+        Assertions.assertThat(response).contains("Nie");
     }
 }

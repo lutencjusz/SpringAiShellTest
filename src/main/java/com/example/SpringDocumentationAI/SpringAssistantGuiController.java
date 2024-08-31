@@ -2,6 +2,7 @@ package com.example.SpringDocumentationAI;
 
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponse;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HxRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.InMemoryChatMemory;
@@ -15,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.logging.Logger;
 
+@Slf4j
 @Controller
 @CrossOrigin
 public class SpringAssistantGuiController {
@@ -24,7 +25,6 @@ public class SpringAssistantGuiController {
     @Autowired
     private SpringAssistantService springAssistantService;
 
-    private static final Logger logger = Logger.getLogger(SpringAssistantGuiController.class.getName());
     private final ChatClient chatClient;
 
     /**
@@ -39,7 +39,7 @@ public class SpringAssistantGuiController {
                 .build();
     }
 
-    @GetMapping
+    @GetMapping("/chat")
     public String index() {
         return "index";
     }
@@ -47,13 +47,13 @@ public class SpringAssistantGuiController {
     @HxRequest
     @PostMapping("/api/chat")
     public HtmxResponse generate(@RequestParam String message, Model model) {
-        logger.info("Otrzymany komunikat: " + message);
+        log.info("Otrzymany komunikat: {}", message);
         Instant startTime = Instant.now();
         String response = springAssistantService.getChatGptAnswer(message);
         Instant endTime = Instant.now();// Zakończ mierzenie czasu
         Duration duration = Duration.between(startTime, endTime);
         long timeElapsed = duration.toMillis();
-        logger.info("Odpowiedź: " + response);
+        log.info("Odpowiedź: {}", response);
         model.addAttribute("response", response);
         model.addAttribute("message", message);
         model.addAttribute("timeElapsed", String.valueOf(timeElapsed));

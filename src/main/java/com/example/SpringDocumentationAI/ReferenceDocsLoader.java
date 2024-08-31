@@ -4,9 +4,8 @@ import com.example.SpringDocumentationAI.readers.EpubDocumentContent;
 import com.example.SpringDocumentationAI.readers.PdfDocumentContent;
 import com.example.SpringDocumentationAI.readers.ReaderDocumentInterface;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import nl.siegmann.epublib.domain.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.ai.transformer.splitter.TokenTextSplitter;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -21,12 +20,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 public class ReferenceDocsLoader {
 
     private static final String RESOURCE_AND_EXTENSION_CLASSPATH = "classpath:/docs/*.*";
 
-    private static final Logger logger = LoggerFactory.getLogger(ReferenceDocsLoader.class);
     private final JdbcClient jdbcClient;
     private final VectorStore vectorStore;
     ReaderDocumentInterface[] readersDocument = new ReaderDocumentInterface[]{
@@ -49,7 +48,7 @@ public class ReferenceDocsLoader {
             BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream(), resource.getInputEncoding()));
             return reader.lines().collect(Collectors.joining("\n"));
         } catch (Exception e) {
-            logger.info("Błąd przy pobieraniu zasobów jako String: ", e);
+            log.info("Błąd przy pobieraniu zasobów jako String: ", e);
             throw new RuntimeException(e);
         }
     }
@@ -63,9 +62,9 @@ public class ReferenceDocsLoader {
     @PostConstruct
     public void init() {
         int count = getCountVectorStore();
-        logger.info("Loaded {} chunks from DB", count);
+        log.info("Loaded {} chunks from DB", count);
         if (count == 0) {
-            logger.info("Loading documents from resources...");
+            log.info("Loading documents from resources...");
             var textSplitter = new TokenTextSplitter();
             resources.forEach(resource -> {
                 try {
@@ -75,14 +74,14 @@ public class ReferenceDocsLoader {
                         }
                     }
                 } catch (IOException e) {
-                    logger.error("Error: ", e);
+                    log.error("Error: ", e);
                     throw new RuntimeException(e);
                 }
-                logger.info("Splitted up from resource '{}'. For now, totally splitt up {} chunks", resource.getFilename(), getCountVectorStore());
+                log.info("Splitted up from resource '{}'. For now, totally splitt up {} chunks", resource.getFilename(), getCountVectorStore());
             });
-            logger.info("Splitting up chanks has finished, splited up {} chunks", getCountVectorStore());
+            log.info("Splitting up chanks has finished, splited up {} chunks", getCountVectorStore());
         } else {
-            logger.info("Chanks already splited up, skipping load resources.");
+            log.info("Chanks already splited up, skipping load resources.");
         }
     }
 }

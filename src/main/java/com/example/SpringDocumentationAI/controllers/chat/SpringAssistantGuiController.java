@@ -1,5 +1,6 @@
-package com.example.SpringDocumentationAI;
+package com.example.SpringDocumentationAI.controllers.chat;
 
+import com.example.SpringDocumentationAI.SpringAssistantService;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponse;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HxRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +40,7 @@ public class SpringAssistantGuiController {
                 .build();
     }
 
-    @GetMapping("/chat")
+    @GetMapping("/")
     public String index() {
         return "index";
     }
@@ -61,6 +62,11 @@ public class SpringAssistantGuiController {
                 .view("response :: responseFragment")
                 .view("recent-message-list :: messageFragment")
                 .build();
+    }
+
+    @GetMapping("/login")
+    public String customLogin() {
+        return "login";
     }
 
 }

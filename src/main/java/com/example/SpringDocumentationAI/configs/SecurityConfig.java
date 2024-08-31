@@ -1,13 +1,15 @@
-package com.example.SpringDocumentationAI;
+package com.example.SpringDocumentationAI.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-
-import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
@@ -23,15 +25,30 @@ public class SecurityConfig {
                         .xssProtection(HeadersConfigurer.XXssConfig::disable) // Enables XSS protection
                 )
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/api/chat/**", "/chat/**", "/question/**", "/swagger-ui/**", "/api-docs/**").permitAll()
+                        .requestMatchers("/api/chat/**", "/chat/**", "/question/**", "/swagger-ui/**", "/api-docs/**").hasRole("ADMIN")
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
-                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/").hasRole("ADMIN")
                         .anyRequest().denyAll()
                 )
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers("/api/chat/**", "/chat/**") // Wyłącz CSRF dla określonych endpointów
                 )
-                .formLogin(withDefaults());
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/", true)
+                        .permitAll()
+                );
         return http.build();
     }
+
+    @Bean
+    UserDetailsService userDetailsService() {
+        UserDetails user = User
+                .withUsername("admin")
+                .password("{noop}admin")
+                .roles("ADMIN")
+                .build();
+        return new InMemoryUserDetailsManager(user);
+    }
+
 }

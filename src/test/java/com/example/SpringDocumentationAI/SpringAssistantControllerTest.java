@@ -10,6 +10,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -49,7 +50,7 @@ class SpringAssistantControllerTest {
     @MockBean
     private SpringAssistantService springAssistantService;
 
-    private static DtoChatGptRequest dtoChatGptRequest = new DtoChatGptRequest("1", "Czy kury są szczęśliwe?");
+    private static final DtoChatGptRequest dtoChatGptRequest = new DtoChatGptRequest("1", "Czy kury są szczęśliwe?");
     private static final JwtLoginForm jwtLoginForm = new JwtLoginForm("admin", "admin123#");
 
     private static String jwtKey = "";
@@ -67,6 +68,7 @@ class SpringAssistantControllerTest {
     }
 
     @Test
+    @DisplayName("Powinien zwrócić prawidłową odpowiedź na pytanie z ChatGpt")
     void shouldAnswerForQuestionFromChatGpt() throws Exception {
         ResponseEntity<String> answer = ResponseEntity.ok("Nie");
 

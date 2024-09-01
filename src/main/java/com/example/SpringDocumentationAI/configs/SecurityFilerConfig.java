@@ -14,10 +14,11 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+public class SecurityFilerConfig {
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -27,6 +28,9 @@ public class SecurityConfig {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtAuthenticationFilterConfig jwtAuthenticationFilterConfig;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -38,19 +42,21 @@ public class SecurityConfig {
                         .xssProtection(HeadersConfigurer.XXssConfig::disable) // Enables XSS protection
                 )
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/question/**", "/swagger-ui/**", "/api-docs/**").hasRole("ADMIN")
-                        .requestMatchers("/css/**", "/js/**", "/images/**", "/login/**", "/register/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/api-docs/**").hasRole("ADMIN")
+                        .requestMatchers("/login/**", "/register/**", "/authenticate", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/question").authenticated()
                         .requestMatchers("/", "/api/chat/**", "/chat/**").hasAnyRole("USER", "ADMIN")
-                        .anyRequest().denyAll()
+                        .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/api/chat/**", "/chat/**", "/register/**", "/question/**") // Wyłącz CSRF dla określonych endpointów
+                        .ignoringRequestMatchers("/api/chat/**", "/chat/**", "/register", "authenticate", "/question") // Wyłącz CSRF dla określonych endpointów
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/", true)
                         .permitAll()
-                );
+                )
+                .addFilterBefore(jwtAuthenticationFilterConfig, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

@@ -1,6 +1,6 @@
 package com.example.SpringDocumentationAI.services;
 
-import com.example.SpringDocumentationAI.model.AiUser;
+import com.example.SpringDocumentationAI.model.DtoUser;
 import com.example.SpringDocumentationAI.repositories.AiUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -23,7 +23,7 @@ public class AiUserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<AiUser> actualUser = aiUserRepository.findByUsername(username);
+        Optional<DtoUser> actualUser = aiUserRepository.findByUsername(username);
         if (actualUser.isPresent()) {
             var userObject = actualUser.get();
             return User.builder()
@@ -36,15 +36,15 @@ public class AiUserService implements UserDetailsService {
         }
     }
 
-    private String[] getRoles(AiUser aiUser) {
-        if (aiUser.getRole() == null) {
+    private String[] getRoles(DtoUser dtoUser) {
+        if (dtoUser.getRole() == null) {
             return new String[]{"ADMIN"};
         }
-        return new String[]{aiUser.getRole()};
+        return new String[]{dtoUser.getRole()};
     }
 
     // Metoda do dodawania nowego użytkownika
-    public AiUser saveUser(AiUser user) {
+    public DtoUser saveUser(DtoUser user) {
         user.setPassword(passwordEncoder.encode(user.getPassword())); // Szyfruj hasło przed zapisem
         return aiUserRepository.save(user);
     }

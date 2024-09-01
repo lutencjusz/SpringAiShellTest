@@ -1,6 +1,6 @@
 package com.example.SpringDocumentationAI.controllers;
 
-import com.example.SpringDocumentationAI.SpringAssistantService;
+import com.example.SpringDocumentationAI.services.SpringAssistantService;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponse;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HxRequest;
 import lombok.extern.slf4j.Slf4j;

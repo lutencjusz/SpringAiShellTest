@@ -1,6 +1,7 @@
 package com.example.SpringDocumentationAI;
 
 import com.example.SpringDocumentationAI.model.DtoChatGptRequest;
+import com.example.SpringDocumentationAI.services.SpringAssistantService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

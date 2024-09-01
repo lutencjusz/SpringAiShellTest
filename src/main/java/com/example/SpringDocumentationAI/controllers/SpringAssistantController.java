@@ -1,6 +1,6 @@
 package com.example.SpringDocumentationAI.controllers;
 
-import com.example.SpringDocumentationAI.SpringAssistantService;
+import com.example.SpringDocumentationAI.services.SpringAssistantService;
 import com.example.SpringDocumentationAI.model.DtoChatGptRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

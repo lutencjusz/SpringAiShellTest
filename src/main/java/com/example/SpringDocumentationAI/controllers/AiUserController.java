@@ -1,6 +1,6 @@
 package com.example.SpringDocumentationAI.controllers;
 
-import com.example.SpringDocumentationAI.model.AiUser;
+import com.example.SpringDocumentationAI.model.DtoUser;
 import com.example.SpringDocumentationAI.services.AiUserService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +15,13 @@ public class AiUserController {
     private AiUserService aiUserService;
 
     @PostMapping("/register")
-    public AiUser registerUser(@RequestBody AiUser user) {
+    public DtoUser registerUser(@RequestBody DtoUser user) {
         return aiUserService.saveUser(user); // Zapisuje nowego użytkownika do bazy
     }
 
     @PostConstruct
     public void init() {
-        AiUser user = new AiUser("admin", "admin", "ADMIN");
+        DtoUser user = new DtoUser("admin", "admin123#", "ADMIN");
         aiUserService.saveUser(user);
     }
 }

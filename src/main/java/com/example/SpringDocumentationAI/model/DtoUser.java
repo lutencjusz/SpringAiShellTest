@@ -17,7 +17,7 @@ import java.util.Collections;
 @Setter
 @Entity
 @Builder
-public class AiUser implements UserDetails {
+public class DtoUser implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,7 +27,7 @@ public class AiUser implements UserDetails {
     @Getter
     private String role;
 
-    public AiUser(String username, String password, String role) {
+    public DtoUser(String username, String password, String role) {
         this.username = username;
         this.password = password;
         this.role = role;

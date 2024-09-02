@@ -1,6 +1,7 @@
 package com.example.SpringDocumentationAI.configs;
 
 import com.example.SpringDocumentationAI.services.AiUserService;
+import com.example.SpringDocumentationAI.services.CustomOAuth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +21,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityFilerConfig {
 
+    private final JwtAuthenticationFilterConfig jwtAuthenticationFilterConfig;
+    private final CustomOAuth2UserService customOAuth2UserService;
+
+    public SecurityFilerConfig(JwtAuthenticationFilterConfig jwtAuthenticationFilterConfig, CustomOAuth2UserService customOAuth2UserService) {
+        this.jwtAuthenticationFilterConfig = jwtAuthenticationFilterConfig;
+        this.customOAuth2UserService = customOAuth2UserService;
+    }
+
     @Autowired
     private UserDetailsService userDetailsService;
 
@@ -28,9 +37,6 @@ public class SecurityFilerConfig {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private JwtAuthenticationFilterConfig jwtAuthenticationFilterConfig;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -55,6 +61,14 @@ public class SecurityFilerConfig {
                         .loginPage("/login")
                         .defaultSuccessUrl("/", true)
                         .permitAll()
+                )
+                .oauth2Login(oauth2login -> oauth2login
+                        .loginPage("/login")
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(customOAuth2UserService)
+                        )
+                        .successHandler((request, response, authentication) -> response.sendRedirect("/"))
+                        .failureHandler((request, response, exception) -> response.sendRedirect("/login"))
                 )
                 .addFilterBefore(jwtAuthenticationFilterConfig, UsernamePasswordAuthenticationFilter.class);
         return http.build();

@@ -35,4 +35,4 @@ build/
 .env
 SpringDocumentationAI.log
 /src/main/resources/docs/
-openai_api_key.txt
+/src/main/resources/application.properties

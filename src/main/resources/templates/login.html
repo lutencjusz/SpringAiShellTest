@@ -2,7 +2,7 @@
 <html lang="en" class="h-full bg-gray-50" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device=width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Custom Login Page</title>
   <link href="/css/tailwind-built.css" rel="stylesheet">
 </head>
@@ -52,17 +52,6 @@
         </div>
       </form>
 
-      <!-- Przycisk logowania z Google -->
-      <div class="mt-6">
-        <div class="flex items-center justify-center">
-          <span class="text-sm text-gray-500">or</span>
-        </div>
-        <a href="#" th:href="@{/oauth2/authorization/google}" class="w-full inline-flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 mt-4">
-          <img class="h-5 w-5 mr-2" src="https://ssl.gstatic.com/images/branding/product/1x/gsa_64dp.png" alt="Google Logo">
-          Logowanie do Google
-        </a>
-      </div>
-
       <!-- Rejestracja -->
       <p class="mt-6 text-center text-sm text-gray-500">
         Not a member?
@@ -73,3 +62,4 @@
 </div>
 </body>
 </html>
+

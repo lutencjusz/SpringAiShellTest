@@ -1,6 +1,7 @@
 package com.example.SpringDocumentationAI.configs;
 
 import com.example.SpringDocumentationAI.services.AiUserService;
+import com.example.SpringDocumentationAI.services.CustomOAuth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,14 +33,17 @@ public class SecurityFilerConfig {
     @Autowired
     private JwtAuthenticationFilterConfig jwtAuthenticationFilterConfig;
 
+    @Autowired
+    private CustomOAuth2UserService customOAuth2UserService;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .headers(headers -> headers// Prevents the page from being displayed in a frame or iframe
+                .headers(headers -> headers
                         .httpStrictTransportSecurity(hsts -> hsts
                                 .includeSubDomains(true)
-                                .maxAgeInSeconds(31536000))  // Enforces HTTPS// Restricts resources to the same origin
-                        .xssProtection(HeadersConfigurer.XXssConfig::disable) // Enables XSS protection
+                                .maxAgeInSeconds(31536000))
+                        .xssProtection(HeadersConfigurer.XXssConfig::disable)
                 )
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/swagger-ui/**", "/api-docs/**").hasRole("ADMIN")
@@ -49,12 +53,20 @@ public class SecurityFilerConfig {
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/api/chat/**", "/chat/**", "/register", "authenticate", "/question") // Wyłącz CSRF dla określonych endpointów
+                        .ignoringRequestMatchers("/api/chat/**", "/chat/**", "/register", "authenticate", "/question")
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/", true)
                         .permitAll()
+                )
+                .oauth2Login(oauth2login -> oauth2login
+                        .loginPage("/login")
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(customOAuth2UserService)
+                        )
+                        .successHandler((request, response, authentication) -> response.sendRedirect("/"))
+                        .failureHandler((request, response, exception) -> response.sendRedirect("/login"))
                 )
                 .addFilterBefore(jwtAuthenticationFilterConfig, UsernamePasswordAuthenticationFilter.class);
         return http.build();

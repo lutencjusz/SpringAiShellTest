@@ -2,6 +2,7 @@ package com.example.SpringDocumentationAI.configs;
 
 import com.example.SpringDocumentationAI.services.AiUserService;
 import com.example.SpringDocumentationAI.services.CustomOAuth2UserService;
+import com.example.SpringDocumentationAI.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +31,7 @@ public class SecurityFilerConfig {
     }
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private CustomUserDetailsService customUserDetailsService;
 
     @Autowired
     private AiUserService aiUserService;
@@ -71,7 +72,7 @@ public class SecurityFilerConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return userDetailsService;
+        return customUserDetailsService;
     }
 
     /**
@@ -83,7 +84,7 @@ public class SecurityFilerConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
+        provider.setUserDetailsService(customUserDetailsService);
         provider.setPasswordEncoder(passwordEncoder);
         return provider;
     }

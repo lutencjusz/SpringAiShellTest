@@ -43,6 +43,10 @@ public class AiUserService implements UserDetailsService {
         return new String[]{dtoUser.getRole()};
     }
 
+    public Optional<DtoUser> findByUsername(String username) {
+        return aiUserRepository.findByUsername(username);
+    }
+
     // Metoda do dodawania nowego użytkownika
     public DtoUser saveUser(DtoUser user) {
         user.setPassword(passwordEncoder.encode(user.getPassword())); // Szyfruj hasło przed zapisem

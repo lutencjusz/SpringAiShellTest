@@ -22,7 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityFilerConfig {
 
     private final JwtAuthenticationFilterConfig jwtAuthenticationFilterConfig;
-    private final CustomOAuth2UserService customOAuth2UserService;
+    private CustomOAuth2UserService customOAuth2UserService;
 
     public SecurityFilerConfig(JwtAuthenticationFilterConfig jwtAuthenticationFilterConfig, CustomOAuth2UserService customOAuth2UserService) {
         this.jwtAuthenticationFilterConfig = jwtAuthenticationFilterConfig;
@@ -41,38 +41,33 @@ public class SecurityFilerConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .headers(headers -> headers// Prevents the page from being displayed in a frame or iframe
+                .headers(headers -> headers
                         .httpStrictTransportSecurity(hsts -> hsts
                                 .includeSubDomains(true)
-                                .maxAgeInSeconds(31536000))  // Enforces HTTPS// Restricts resources to the same origin
-                        .xssProtection(HeadersConfigurer.XXssConfig::disable) // Enables XSS protection
-                )
+                                .maxAgeInSeconds(31536000))
+                        .xssProtection(HeadersConfigurer.XXssConfig::disable))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/swagger-ui/**", "/api-docs/**").hasRole("ADMIN")
                         .requestMatchers("/login/**", "/register/**", "/authenticate", "/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/question").authenticated()
                         .requestMatchers("/", "/api/chat/**", "/chat/**").hasAnyRole("USER", "ADMIN")
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/api/chat/**", "/chat/**", "/register", "authenticate", "/question") // Wyłącz CSRF dla określonych endpointów
-                )
+                        .ignoringRequestMatchers("/api/chat/**", "/chat/**", "/register", "authenticate", "/question"))
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/", true)
-                        .permitAll()
-                )
+                        .permitAll())
                 .oauth2Login(oauth2login -> oauth2login
                         .loginPage("/login")
                         .userInfoEndpoint(userInfo -> userInfo
-                                .userService(customOAuth2UserService)
-                        )
+                                .userService(customOAuth2UserService)) // Custom OAuth2UserService
                         .successHandler((request, response, authentication) -> response.sendRedirect("/"))
-                        .failureHandler((request, response, exception) -> response.sendRedirect("/login"))
-                )
+                        .failureHandler((request, response, exception) -> response.sendRedirect("/login")))
                 .addFilterBefore(jwtAuthenticationFilterConfig, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
 
     @Bean
     public UserDetailsService userDetailsService() {

@@ -3,6 +3,7 @@ package com.example.SpringDocumentationAI.services;
 import com.example.SpringDocumentationAI.model.DtoUser;
 import com.example.SpringDocumentationAI.repositories.AiUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,9 +23,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (dtoUser.isEmpty()) {
             throw new UsernameNotFoundException("User not found");
         }
+        User user = new User(dtoUser.get().getUsername(), dtoUser.get().getPassword(), dtoUser.get().getAuthorities());
 
         // Konwersja własnej encji User na UserDetails Spring Security
-        return new org.springframework.security.core.userdetails.User(dtoUser.get().getUsername(), dtoUser.get().getPassword(), dtoUser.get().getAuthorities());
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getAuthorities());
     }
 }
 

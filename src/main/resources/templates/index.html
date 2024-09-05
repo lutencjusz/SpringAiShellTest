@@ -8,6 +8,63 @@
     <title>AI document analizer</title>
     <script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2" crossorigin="anonymous"></script>
     <link href="/css/tailwind-built.css" rel="stylesheet">
+    <style>
+        /* Custom styles for floating button and modal */
+        .menu-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #D1D5DB;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        .logout {
+            transition: background-color 0.3s ease;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .modal-header {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .modal-close {
+            cursor: pointer;
+            color: red;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body class="h-screen bg-gray-100">
 <div class="flex h-full">
@@ -19,7 +76,7 @@
             <div id="recent-message-list" class="mt-4 font-bold text-lg">Ostatnie zapytania</div>
         </div>
         <!-- Logout Button -->
-        <div class="mt-auto">
+        <div class="logout mt-auto">
             <a href="/login" class="block text-center bg-gray-300 hover:bg-gray-400 rounded-full py-2 px-4 shadow-md">
                 Wyloguj się
             </a>
@@ -46,7 +103,55 @@
             </form>
         </div>
     </main>
+    <div class="bg-gray-300 hover:bg-gray-400 menu-button" id="menuButton">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </div>
+
+    <!-- Modal for the Menu -->
+    <div class="modal" id="menuModal">
+        <div class="modal-content">
+            <div class="modal-header">Menu</div>
+            <ul class="space-y-4">
+                <li>
+                    <a href="/load-data" class="block text-gray-700 hover:bg-gray-300 rounded-lg p-2">
+                        Ładowanie danych
+                    </a>
+                </li>
+                <li>
+                    <a href="/user-management" class="block text-gray-700 hover:bg-gray-300 rounded-lg p-2">
+                        Zarządzanie użytkownikiem
+                    </a>
+                </li>
+            </ul>
+            <div class="mt-4">
+                <button class="modal-close" id="closeMenuModal">Zamknij</button>
+            </div>
+        </div>
+    </div>
 </div>
+<script>
+    // JavaScript to toggle the modal
+    const menuButton = document.getElementById('menuButton');
+    const menuModal = document.getElementById('menuModal');
+    const closeMenuModal = document.getElementById('closeMenuModal');
+
+    menuButton.addEventListener('click', function () {
+        menuModal.style.display = 'flex';  // Show modal
+    });
+
+    closeMenuModal.addEventListener('click', function () {
+        menuModal.style.display = 'none';  // Hide modal
+    });
+
+    // Close modal when clicking outside of it
+    window.addEventListener('click', function (event) {
+        if (event.target === menuModal) {
+            menuModal.style.display = 'none';
+        }
+    });
+</script>
 </body>
 </html>
 

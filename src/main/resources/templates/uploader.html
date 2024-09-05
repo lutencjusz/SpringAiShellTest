@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ładowanie i pobieranie pliku</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .file-upload {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .custom-file-upload {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 150px;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .custom-file-upload:hover {
+            background-color: #45a049;
+        }
+
+        .file-name {
+            margin-left: 10px;
+            font-size: 14px;
+            color: #555;
+            flex-grow: 1;
+            text-align: left;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-left: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            height: 38px;
+            display: flex;
+            align-items: center;
+        }
+
+        .submit-button button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .submit-button button:hover {
+            background-color: #45a049;
+        }
+
+        #message {
+            margin-top: 20px;
+            color: red;
+            font-weight: bold;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        ul li a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        ul li a:hover {
+            text-decoration: underline;
+        }
+
+        #file {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Ładowanie pliku</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <div class="file-upload">
+            <label for="file" class="custom-file-upload">
+                Wybierz plik
+            </label>
+            <input type="file" name="file" id="file" required>
+            <div class="file-name" id="file-name">Nie wybrano pliku</div>
+        </div>
+        <div class="submit-button">
+            <button type="submit">Ładowanie</button>
+        </div>
+    </form>
+    <div id="message"></div>
+
+    <h2 id="available-files-label"></h2>
+    <ul id="file-list">
+        <li th:each="file : ${files}">
+            <a th:href="@{/download-faster(fileName=${file})}" th:text="${file}"></a>
+        </li>
+    </ul>
+</div>
+<script>
+
+    document.getElementById('file').addEventListener('change', function(event) {
+        const fileInput = event.target;
+        const file = fileInput.files[0];
+        const fileName = file ? file.name : 'Nie wybrano pliku';
+        document.getElementById('file-name').innerText = fileName;
+    });
+
+    document.getElementById('uploadForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData();
+        const fileInput = document.getElementById('file');
+        const file = fileInput.files[0];
+
+        if (!file) {
+            document.getElementById('message').innerText = 'Wybierz plik!';
+            return;
+        }
+
+        formData.append('file', file);
+
+        fetch('/upload', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result) {
+                document.getElementById('message').style.color = 'green';
+                document.getElementById('message').innerText = 'Plik załadowany z powodzeniem!';
+                updateFileList();
+            } else {
+                document.getElementById('message').style.color = 'red';
+                document.getElementById('message').innerText = 'Plik nie został załadowany!';
+            }
+        })
+        .catch(error => {
+            document.getElementById('message').style.color = 'red';
+            document.getElementById('message').innerText = 'Błąd: ' + error.message;
+        });
+    });
+    function updateFileList() {
+            fetch('/files-list')
+            .then(response => response.json())
+            .then(files => {
+                const fileList = document.getElementById('file-list');
+                fileList.innerHTML = '';
+                files.length === 0 ? document.getElementById('available-files-label').innerText = 'Brak dostępnych plików' : document.getElementById('available-files-label').innerText = 'Dostępne pliki';
+                if (files.length == 1) document.getElementById('available-files-label').innerText = 'Dostępny plik';
+                files.forEach(file => {
+                    const li = document.createElement('li');
+                    const a = document.createElement('a');
+                    a.href = `/download-faster?fileName=${file}`;
+                    a.textContent = file;
+                    li.appendChild(a);
+                    fileList.appendChild(li);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching file list:', error);
+            });
+        }
+
+        // Pobierz listę plików przy ładowaniu strony
+        updateFileList();
+</script>
+</body>
+</html>
+

@@ -131,7 +131,8 @@
             <label for="file" class="custom-file-upload">
                 Wybierz plik
             </label>
-            <input type="file" name="file" id="file" required>
+            <input type="file" id="file" required>
+            <input type="hidden" name="_csrf" value="${_csrf.token}">
             <div class="file-name" id="file-name">Nie wybrano pliku</div>
         </div>
         <div class="submit-button">
@@ -171,7 +172,7 @@
 
         fetch('/upload', {
             method: 'POST',
-            body: formData,
+            body: formData
         })
         .then(response => response.json())
         .then(result => {

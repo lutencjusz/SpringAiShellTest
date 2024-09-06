@@ -15,41 +15,44 @@ import java.util.Objects;
 public class FileManagerService {
 
     Dotenv dotenv = Dotenv.load();
+    private final String sourcePath = dotenv.get("SOURCE_PATH");
 
     public void saveFile(MultipartFile file) throws IOException, NullPointerException, SecurityException {
 
-        String FILE_PATH = dotenv.get("SOURCE_PATH");
+        final String absoluteUploadPath = new File("").getAbsolutePath() + File.separator + sourcePath;
+
         if (file.isEmpty() || file.getOriginalFilename() == null || file.getOriginalFilename().isEmpty()) {
             throw new NullPointerException("Nie wybrano pliku");
         }
-        File fileToUpload = new File(FILE_PATH + File.separator + file.getOriginalFilename());
-        if (!Objects.equals(fileToUpload.getParentFile().toString(), FILE_PATH)) {
+        File fileToUpload = new File(absoluteUploadPath + File.separator + file.getOriginalFilename());
+        if (!Objects.equals(fileToUpload.getParentFile().toString(), absoluteUploadPath)) {
             throw new SecurityException("Błąd zapisu pliku");
         }
         Files.copy(file.getInputStream(), fileToUpload.toPath(), StandardCopyOption.REPLACE_EXISTING);
     }
 
     public File getDownloadFile(String fileName) throws IOException {
-        String FILE_PATH = dotenv.get("SOURCE_PATH");
+
+        final String absoluteUploadPath = new File("").getAbsolutePath() + File.separator + sourcePath;
+
         if (fileName == null || fileName.isEmpty()) {
             throw new NullPointerException("Nie wybrano pliku");
         }
-        File fileToDownload = new File(FILE_PATH + File.separator + fileName);
+        File fileToDownload = new File(absoluteUploadPath + File.separator + fileName);
         if (!fileToDownload.exists()) {
             throw new IOException("Plik '" + fileName + "' nie istnieje");
         }
-        if (!Objects.equals(fileToDownload.getParentFile().toString(), FILE_PATH)) {
+        if (!Objects.equals(fileToDownload.getParentFile().toString(), absoluteUploadPath)) {
             throw new SecurityException("Błąd odczytu pliku");
         }
         return fileToDownload;
     }
 
     public List<String> getFileNames() throws IOException {
-        String FILE_PATH = dotenv.get("SOURCE_PATH");
-        assert FILE_PATH != null;
-        File file = new File(FILE_PATH);
+        final String absoluteUploadPath = new File("").getAbsolutePath() + File.separator + sourcePath;
+        File file = new File(absoluteUploadPath);
         if (!file.exists()) {
-            throw new IOException("Katalog '" + FILE_PATH + "' nie istnieje");
+            throw new IOException("Katalog '" + absoluteUploadPath + "' nie istnieje");
         }
         return List.of(Objects.requireNonNull(file.list()));
     }

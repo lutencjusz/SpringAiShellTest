@@ -1,4 +1,4 @@
-package com.example.SpringDocumentationAI.controllers;
+package com.example.SpringDocumentationAI.controllers.gui;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.stereotype.Controller;

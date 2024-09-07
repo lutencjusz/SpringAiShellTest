@@ -26,10 +26,10 @@ public class AiUserController {
     @Autowired
     private JwtService jwtService;
 
-    @PostMapping("/register")
-    public DtoUser registerUser(@RequestBody DtoUser user) {
-        return aiUserService.saveUser(user); // Zapisuje nowego użytkownika do bazy
-    }
+//    @PostMapping("/register")
+//    public DtoUser registerUser(@RequestBody DtoUser user) {
+//        return aiUserService.saveUser(user); // Zapisuje nowego użytkownika do bazy
+//    }
 
     @PostConstruct
     public void init() {

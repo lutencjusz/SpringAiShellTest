@@ -659,8 +659,17 @@ video {
   inset: -0.25rem;
 }
 
+.inset-y-10 {
+  top: 2.5rem;
+  bottom: 2.5rem;
+}
+
 .end-1 {
   inset-inline-end: 0.25rem;
+}
+
+.right-0 {
+  right: 0px;
 }
 
 .isolate {
@@ -728,8 +737,16 @@ video {
   margin-bottom: 1rem;
 }
 
+.mb-6 {
+  margin-bottom: 1.5rem;
+}
+
 .mb-8 {
   margin-bottom: 2rem;
+}
+
+.ml-1 {
+  margin-left: 0.25rem;
 }
 
 .ml-2 {
@@ -933,6 +950,10 @@ video {
 
 .max-w-full {
   max-width: 100%;
+}
+
+.max-w-lg {
+  max-width: 32rem;
 }
 
 .flex-1 {
@@ -2142,6 +2163,10 @@ video {
   padding-bottom: 0.5rem;
 }
 
+.pr-3 {
+  padding-right: 0.75rem;
+}
+
 .text-left {
   text-align: left;
 }
@@ -2196,6 +2221,11 @@ video {
 
 .align-super {
   vertical-align: super;
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
 }
 
 .text-3xl {
@@ -2296,6 +2326,10 @@ video {
 .stacked-fractions {
   --tw-numeric-fraction: stacked-fractions;
   font-variant-numeric: var(--tw-ordinal) var(--tw-slashed-zero) var(--tw-numeric-figure) var(--tw-numeric-spacing) var(--tw-numeric-fraction);
+}
+
+.leading-5 {
+  line-height: 1.25rem;
 }
 
 .text-\[\#336699\]\/\[\.35\] {
@@ -2835,6 +2869,10 @@ video {
 .focus\:ring-indigo-500:focus {
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(99 102 241 / var(--tw-ring-opacity));
+}
+
+.focus\:ring-opacity-50:focus {
+  --tw-ring-opacity: 0.5;
 }
 
 .focus\:ring-offset-2:focus {

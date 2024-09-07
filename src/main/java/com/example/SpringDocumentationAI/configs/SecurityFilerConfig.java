@@ -47,13 +47,13 @@ public class SecurityFilerConfig {
                         .xssProtection(HeadersConfigurer.XXssConfig::disable))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/swagger-ui/**", "/api-docs/**").hasRole("ADMIN")
-                        .requestMatchers("/login/**", "/register/**", "/authenticate", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/login/**", "/register/**", "/authenticate", "/css/**", "/js/**", "/images/**", "/register-user").permitAll()
                         .requestMatchers("/question", "/upload").authenticated()
                         .requestMatchers("/", "/api/chat/**", "/chat/**", "/load-data").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/download", "/download-faster", "/files-list").permitAll()
                         .anyRequest().authenticated())
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/upload", "/api/chat/**", "/chat/**", "/register", "/authenticate", "/question"))
+                        .ignoringRequestMatchers("/register-user", "/upload", "/api/chat/**", "/chat/**", "/register", "/authenticate", "/question"))
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/", true)

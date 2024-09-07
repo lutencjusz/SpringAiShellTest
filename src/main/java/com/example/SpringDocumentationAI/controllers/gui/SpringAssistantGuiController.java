@@ -1,4 +1,4 @@
-package com.example.SpringDocumentationAI.controllers;
+package com.example.SpringDocumentationAI.controllers.gui;
 
 import com.example.SpringDocumentationAI.services.SpringAssistantService;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponse;

@@ -1,55 +1,36 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>Lista plików</title>
-  <style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f9f9f9;
-        padding: 20px;
-    }
-    h1 {
-        text-align: center;
-        color: #333;
-    }
-    .file-list-container {
-        max-width: 600px;
-        margin: 0 auto;
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    ul {
-        list-style-type: none;
-        padding: 0;
-    }
-    li {
-        padding: 10px 0;
-        border-bottom: 1px solid #ddd;
-    }
-    li:last-child {
-        border-bottom: none;
-    }
-    a {
-        color: #007BFF;
-        text-decoration: none;
-        font-size: 18px;
-    }
-    a:hover {
-        text-decoration: underline;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>Lista plików</title>
+    <link href="/css/tailwind-built.css" rel="stylesheet">
+    <link href="/css/common-color.css" rel="stylesheet">
+    <link href="/css/file-list.css" rel="stylesheet">
 </head>
 <body>
+<h1>Dostępne pliki</h1>
 <div class="file-list-container">
-  <h1>Dostępne pliki</h1>
-  <ul>
-    <li th:each="file : ${files}">
-      <a th:href="@{/download-faster(fileName=${file})}" th:text="${file}"></a>
-    </li>
-  </ul>
+    <table class="min-w-full border border-gray-200">
+        <thead class="bg-gray-100">
+        <tr>
+            <th class="border px-4 py-2 text-left">#</th>
+            <th class="border px-4 py-2 text-left">File Name</th>
+        </tr>
+        </thead>
+        <tbody id="file-list">
+        <!-- Użycie poprawnej składni dla iteracji -->
+        <tr th:each="file, iterStat : ${files}">
+            <!-- Numeracja plików -->
+            <td class="border px-4 py-2">
+                <span th:text="${iterStat.index + 1}"></span>
+            </td>
+            <!-- Nazwa pliku w jednej linii -->
+            <td class="border px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">
+                <a th:href="@{/download-faster(fileName=${file})}" th:text="${file}"></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>

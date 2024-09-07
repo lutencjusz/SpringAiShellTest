@@ -3,129 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Ładowanie i pobieranie pliku</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 400px;
-            text-align: center;
-        }
-
-        h1 {
-            margin-bottom: 20px;
-        }
-
-        .file-upload {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            margin-bottom: 10px;
-        }
-
-        .file-upload input[type="file"] {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .custom-file-upload {
-            background-color: #D1D5DB;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            width: 150px;
-            text-align: center;
-            display: inline-block;
-        }
-
-        .custom-file-upload:hover {
-            background-color: #E5E7EB;
-        }
-
-        .file-name {
-            margin-left: 10px;
-            font-size: 14px;
-            color: #555;
-            flex-grow: 1;
-            text-align: left;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            padding-left: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background-color: #f9f9f9;
-            height: 38px;
-            display: flex;
-            align-items: center;
-        }
-
-        .submit-button button {
-            background-color: #D1D5DB;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 20px;
-            width: 100%;
-        }
-
-        .submit-button button:hover {
-            background-color: #E5E7EB;
-        }
-
-        #message {
-            margin-top: 20px;
-            color: red;
-            font-weight: bold;
-        }
-
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        ul li a {
-            color: #333;
-            text-decoration: none;
-        }
-
-        ul li a:hover {
-            text-decoration: underline;
-        }
-
-        #file {
-            display: none;
-        }
-    </style>
+    <link href="/css/tailwind-built.css" rel="stylesheet">
+    <link href="/css/common-color.css" rel="stylesheet">
+    <link href="/css/uploader.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
-    <h1>Ładowanie pliku</h1>
+    <div class="header flex items-center">
+        <a href="http://localhost:8080" class="bg-gray-300 hover:bg-gray-400 text-gray-600 rounded-full p-2 ml-1">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l-7 7 7 7"></path>
+            </svg>
+        </a>
+        <h1 class="font-bold text-xl flex-1 text-center">Ładowanie pliku</h1>
+    </div>
     <form id="uploadForm" enctype="multipart/form-data">
         <div class="file-upload">
             <label for="file" class="custom-file-upload">
@@ -141,12 +32,28 @@
     </form>
     <div id="message"></div>
 
-    <h2 id="available-files-label"></h2>
-    <ul id="file-list">
-        <li th:each="file : ${files}">
-            <a th:href="@{/download-faster(fileName=${file})}" th:text="${file}"></a>
-        </li>
-    </ul>
+    <h1 class="font-bold text-xl" id="available-files-label"></h1>
+    <table class="min-w-full border border-gray-200">
+        <thead class="bg-gray-100">
+        <tr>
+            <th class="border px-4 py-2 text-left">#</th>
+            <th class="border px-4 py-2 text-left">File Name</th>
+        </tr>
+        </thead>
+        <tbody id="file-list">
+        <!-- Użycie poprawnej składni dla iteracji -->
+        <tr th:each="file, iterStat : ${files}">
+            <!-- Numeracja plików -->
+            <td class="border px-4 py-2">
+                <span th:text="${iterStat.index + 1}"></span>
+            </td>
+            <!-- Nazwa pliku w jednej linii -->
+            <td class="border px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">
+                <a th:href="@{/download-faster(fileName=${file})}" th:text="${file}"></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 <script>
 
@@ -198,13 +105,28 @@
                 fileList.innerHTML = '';
                 files.length === 0 ? document.getElementById('available-files-label').innerText = 'Brak dostępnych plików' : document.getElementById('available-files-label').innerText = 'Dostępne pliki';
                 if (files.length == 1) document.getElementById('available-files-label').innerText = 'Dostępny plik';
-                files.forEach(file => {
-                    const li = document.createElement('li');
+                files.forEach((file, index) => {
+                    // Tworzenie wiersza tabeli <tr>
+                    const tr = document.createElement('tr');
+
+                    // Kolumna z numeracją
+                    const numberCell = document.createElement('td');
+                    numberCell.className = 'border px-4 py-2';
+                    numberCell.textContent = index + 1; // Numeracja zaczyna się od 1
+                    tr.appendChild(numberCell);
+
+                    // Kolumna z nazwą pliku
+                    const fileNameCell = document.createElement('td');
+                    fileNameCell.className = 'border px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis';
+
                     const a = document.createElement('a');
                     a.href = `/download-faster?fileName=${file}`;
-                    a.textContent = file;
-                    li.appendChild(a);
-                    fileList.appendChild(li);
+                    a.textContent = file; // Nazwa pliku
+                    fileNameCell.appendChild(a);
+                    tr.appendChild(fileNameCell);
+
+                    // Dodanie wiersza do tbody
+                    fileList.appendChild(tr);
                 });
             })
             .catch(error => {

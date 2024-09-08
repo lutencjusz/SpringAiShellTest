@@ -1,0 +1,2 @@
+cd C:\Data\Java\SpringDocumentationAI
+powershell -Command "Get-Content .env | ForEach-Object { if ($_ -match '^\s*(\w+)\s*=\s*(.+)\s*$') { [System.Environment]::SetEnvironmentVariable($matches[1], $matches[2]) } } | java -jar .\target\DocumentAIAnalizer-1.0.0.jar"

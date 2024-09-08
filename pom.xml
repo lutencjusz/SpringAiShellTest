@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>SpringDocumentAIAnalizer</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>SpringDocumentAIAnalizer</name>
-	<description>Demo project for reading and analizing by AI</description>
+	<artifactId>DocumentAIAnalizer</artifactId>
+	<version>1.0.0</version>
+	<name>DocumentAIAnalizer</name>
+	<description>Project for reading and analizing by AI</description>
 	<url/>
 	<licenses>
 		<license/>

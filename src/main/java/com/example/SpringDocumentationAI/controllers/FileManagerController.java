@@ -28,10 +28,12 @@ public class FileManagerController {
 
     Dotenv dotenv = Dotenv.load();
 
-    @Autowired
-    private FileManagerService fileManagerService;
-
+    private final FileManagerService fileManagerService;
     private static final Logger log = Logger.getLogger(FileManagerController.class.getName());
+
+    public FileManagerController(FileManagerService fileManagerService) {
+        this.fileManagerService = fileManagerService;
+    }
 
     /**
      * Wysyłanie pliku na serwer do katalogu C:\Install

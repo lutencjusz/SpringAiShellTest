@@ -4,10 +4,19 @@
     <title>Formularz Użytkownika</title>
     <!-- Dodanie Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/css/common-color.css" rel="stylesheet">
+    <link href="/css/register-user.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 flex items-center justify-center h-screen">
 <div class="bg-white shadow-md rounded-lg p-8 max-w-lg w-full">
-    <h1 class="text-2xl font-bold mb-6 text-center">Formularz Użytkownika</h1>
+    <div class="header flex items-center">
+        <a href="http://localhost:8080" class="bg-gray-300 hover:bg-gray-400 text-gray-600 rounded-full p-2 ml-1">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l-7 7 7 7"></path>
+            </svg>
+        </a>
+        <h1 id="userFormTitle" class="font-bold text-xl flex-1 text-center">Formularz Użytkownika</h1>
+    </div>
 
     <form th:action="@{/register}" th:object="${user}" method="post" class="space-y-6">
 
@@ -41,11 +50,19 @@
             </select>
         </div>
 
-        <!-- Przycisk do zapisania danych -->
-        <div class="text-center">
+        <!-- Przycisk do zapisania danych oraz dodatkowe przyciski -->
+        <div class="text-center flex space-x-4">
             <button type="submit"
                     class="w-full bg-indigo-600 text-white p-2 rounded-md shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
                 Zapisz
+            </button>
+            <button type="button" onclick="clearForm()"
+                    class="w-full bg-gray-400 text-white p-2 rounded-md shadow-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50">
+                Wyczyść
+            </button>
+            <button type="button" onclick="deleteUser()"
+                    class="w-full bg-red-600 text-white p-2 rounded-md shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
+                Usuń użytkownika
             </button>
         </div>
     </form>

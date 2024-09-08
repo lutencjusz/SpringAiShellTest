@@ -22,6 +22,11 @@
             margin-bottom: 20px;
         }
 
+        #loadingFileTitle {
+            margin-inline-end: 3rem;
+            margin-bottom: 0px;
+        }
+
         .file-upload {
             position: relative;
             display: flex;

@@ -8,15 +8,18 @@ import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
 
 @Configuration
 public class SwaggerConfig {
 
     @Bean
-    public OpenAPI defineOpenApi() {
+    public OpenAPI defineOpenApi() throws UnknownHostException {
+        InetAddress inetAddress = InetAddress.getLocalHost();
         Server server = new Server();
-        server.setUrl("http://localhost:8080");
+        server.setUrl("http://" + inetAddress + ":8080");
         server.setDescription("Asystent Chat GPT");
         server.setDescription("Asystent umożliwiający zadawanie pytań i uzyskiwanie odpowiedzi za pomocą GPT-3 na podstawie zasobów dokumentacji w formie plików PDF lub epub");
         Contact myContact = new Contact();

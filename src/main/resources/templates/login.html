@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device=width, initial-scale=1.0">
-  <title>Custom Login Page</title>
+  <title>Strona logowania</title>
+  <meta content="/images/favicon.png" itemprop="image">
   <link href="/css/tailwind-built.css" rel="stylesheet">
   <link href="/css/common-color.css" rel="stylesheet">
 </head>
@@ -11,7 +12,7 @@
 <div class="flex min-h-full flex-col justify-center items-center px-6 py-12">
   <div class="bg-white shadow-lg rounded-lg sm:max-w-md sm:w-full p-8">
     <div class="text-center">
-      <img class="mx-auto h-12 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company">
+      <img class="mx-auto h-12 w-auto" src="/images/favicon.png" alt="Sopim">
       <h2 class="mt-6 text-3xl font-extrabold text-gray-900">Logowanie do konta</h2>
     </div>
 
@@ -21,7 +22,7 @@
         <svg class="h-6 w-6 text-red-500" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
         </svg>
-        <p class="ml-3 text-sm font-medium text-red-800">Invalid Username and Password</p>
+        <p class="ml-3 text-sm font-medium text-red-800">Nieprawidłowa nazwa użytkownika lub hasło</p>
       </div>
 
       <!-- Wylogowanie -->
@@ -56,7 +57,7 @@
         </div>
 
         <div>
-          <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Sign in</button>
+          <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Zaloguj się</button>
         </div>
       </form>
 
@@ -74,7 +75,7 @@
       <!-- Rejestracja -->
       <p class="mt-6 text-center text-sm text-gray-500">
         Nie jesteś użytkownikiem?
-        <a href="#" class="text-indigo-600 hover:text-indigo-500">Zarejestruj się</a>
+        <a href="/register-user" class="text-indigo-600 hover:text-indigo-500">Zarejestruj się</a>
       </p>
     </div>
   </div>

@@ -53,3 +53,9 @@
             color: red;
             font-weight: bold;
         }
+
+        @media (max-width: 768px) {
+            .hide-on-mobile {
+                 display: none;
+            }
+        }

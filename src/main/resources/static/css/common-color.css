@@ -4,3 +4,15 @@
     --background-dark-button-color: #9ca3af;
     --text-color: #333333;
 }
+        body {
+            height: 100vh;
+        }
+
+        @media (max-width: 768px) {
+            html, body {
+                height: 92vh;
+            }
+            .hide-on-mobile {
+                 display: none;
+            }
+        }

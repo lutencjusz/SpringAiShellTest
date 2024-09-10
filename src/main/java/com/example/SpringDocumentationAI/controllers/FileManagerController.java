@@ -1,8 +1,7 @@
 package com.example.SpringDocumentationAI.controllers;
 
 import com.example.SpringDocumentationAI.services.FileManagerService;
-import io.github.cdimascio.dotenv.Dotenv;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -26,7 +25,8 @@ import java.util.logging.Logger;
 @RestController
 public class FileManagerController {
 
-    Dotenv dotenv = Dotenv.load();
+    @Value("${SOURCE_PATH}")
+    private String SOURCE_PATH;
 
     private final FileManagerService fileManagerService;
     private static final Logger log = Logger.getLogger(FileManagerController.class.getName());
@@ -45,14 +45,14 @@ public class FileManagerController {
      */
     @PostMapping("/upload")
     public ResponseEntity<Boolean> uploadFile(@RequestParam("file") MultipartFile file) {
-        String SOURCE_PATH = dotenv.get("SOURCE_PATH");
+
         try {
             fileManagerService.saveFile(file);
             log.log(Level.INFO, "Plik '" + file.getOriginalFilename() + "' został zapisany");
             return ResponseEntity.ok(true);
         } catch (IOException e) {
             String message = e.getMessage();
-            if (SOURCE_PATH != null && e.getMessage().contains(SOURCE_PATH)) {
+            if (e.getMessage().contains(SOURCE_PATH)) {
                 log.log(Level.SEVERE, "Plik '" + file.getOriginalFilename() + "' próbujesz ładować ze ścieżki docelowej '" + SOURCE_PATH + "'", e);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
             } else {
@@ -68,7 +68,7 @@ public class FileManagerController {
     }
 
     /**
-     * Pobieranie pliku ze ścieżki w przeglądarce np. http://localhost:8080/download?fileName=plik.txt
+     * Pobieranie pliku ze ścieżki w przeglądarce np. <a href="http://localhost:8080/download?fileName=plik.txt">link</a>
      * Plik zostanie pobrany z lokalizacji C:\Install\plik.txt
      *
      * @param fileName - nazwa pliku do pobrania

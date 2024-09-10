@@ -1,6 +1,6 @@
 package com.example.SpringDocumentationAI.controllers.gui;
 
-import io.github.cdimascio.dotenv.Dotenv;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,11 +15,10 @@ import java.util.stream.StreamSupport;
 @Controller
 public class FileManagerGuiController {
 
-    Dotenv dotenv = Dotenv.load();
+    @Value("${SOURCE_PATH}")
+    private String SOURCE_PATH;
 
     private void addFiles(Model model) throws IOException {
-        String SOURCE_PATH = dotenv.get("SOURCE_PATH");
-        assert SOURCE_PATH != null;
         try (DirectoryStream<Path> files = Files.newDirectoryStream(Path.of(SOURCE_PATH))) {
             model.addAttribute("files", StreamSupport.stream(files.spliterator(),
                             false)

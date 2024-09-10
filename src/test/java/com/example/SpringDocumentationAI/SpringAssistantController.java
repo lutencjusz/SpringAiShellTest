@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureOrder
 @AutoConfigureMockMvc
 @ActiveProfiles("Test")
-class SpringAssistantControllerTest {
+class SpringAssistantController {
 
     ObjectMapper objectMapper = new ObjectMapper();
 

@@ -1,6 +1,5 @@
 package com.example.SpringDocumentationAI;
 
-import com.example.SpringDocumentationAI.services.SpringAssistantService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ActiveProfiles("Test")
-class SpringAssistantServiceTest {
+class SpringAssistantService {
 
     @Mock
     private ChatClient.Builder chatClientBuilderMock;
@@ -32,13 +31,13 @@ class SpringAssistantServiceTest {
     @Mock
     private Resource sbPromptTemplate;
 
-    private SpringAssistantService springAssistantService;
+    private com.example.SpringDocumentationAI.services.SpringAssistantService springAssistantService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         when(chatClientBuilderMock.build()).thenReturn(chatClientMock);
-        springAssistantService = new SpringAssistantService(chatClientBuilderMock, vectorStoreMock);
+        springAssistantService = new com.example.SpringDocumentationAI.services.SpringAssistantService(chatClientBuilderMock, vectorStoreMock);
     }
 
     @Test

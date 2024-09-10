@@ -9,9 +9,6 @@
         }
 
         @media (max-width: 768px) {
-            html, body {
-                height: 92vh;
-            }
             .hide-on-mobile {
                  display: none;
             }

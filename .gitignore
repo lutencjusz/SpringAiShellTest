@@ -34,5 +34,4 @@ build/
 .vscode/
 .env
 SpringDocumentationAI.log
-/src/main/resources/docs/
 /src/main/resources/application-test.properties

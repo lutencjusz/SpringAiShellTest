@@ -31,7 +31,7 @@ public class AiUserController {
 //        return aiUserService.saveUser(user); // Zapisuje nowego użytkownika do bazy
 //    }
 
-    @PostConstruct
+//    @PostConstruct
     public void init() {
         DtoUser user = new DtoUser("admin", "admin123#", "ADMIN");
         aiUserService.saveUser(user);

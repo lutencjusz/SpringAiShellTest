@@ -54,12 +54,12 @@ public class SpringAssistantGuiController {
         String message = request.getParameter("message");
         String inetAddress = request.getRemoteAddr();
         log.info("Otrzymany komunikat: {}", message);
-        if (inetAddress.equals("0:0:0:0:0:0:0:1")) {
-            inetAddress = InetAddress.getLocalHost().getHostAddress();
-        }
-        if (!inetAddress.contains("192.168.")) {
-            throw new UnknownHostException("Unknow host '" + inetAddress + "' outside of local network");
-        }
+//        if (inetAddress.equals("0:0:0:0:0:0:0:1")) {
+//            inetAddress = InetAddress.getLocalHost().getHostAddress();
+//        }
+//        if (!inetAddress.contains("192.168.")) {
+//            throw new UnknownHostException("Unknow host '" + inetAddress + "' outside of local network");
+//        }
         Instant startTime = Instant.now();
         String response = springAssistantService.getChatGptAnswer(message);
         Instant endTime = Instant.now();// Zakończ mierzenie czasu

@@ -18,10 +18,11 @@
         </a>
         <h1 id="userFormTitle" class="font-bold text-xl flex-1 text-center">Formularz Użytkownika</h1>
     </div>
+    <div id="message" th:if="${message}" class="p-4 mb-4 rounded-lg text-center"
+         th:classappend="${messageType == 'success'} ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
+         th:text="${message}"></div>
 
     <form th:action="@{/register}" th:object="${user}" method="post" class="space-y-6">
-
-        <!-- Nazwa użytkownika -->
         <div>
             <label for="username" class="block text-sm font-medium text-gray-700">Nazwa użytkownika:</label>
             <input type="text" id="username" th:field="*{username}" required
@@ -32,13 +33,15 @@
         <div class="relative">
             <label for="password" class="block text-sm font-medium text-gray-700">Hasło:</label>
             <input type="password" id="password" th:field="*{password}" required
-                   class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                   class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                   oninput="checkPasswordStrength()"/>
             <button type="button" onclick="togglePassword()" class="absolute inset-y-10 right-0 pr-3 flex items-center text-sm leading-5">
                 <svg id="eye-icon" class="h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-.733 2.211-2.43 4.085-4.733 5.099M15 12a9.364 9.364 0 00-3 2.4" />
                 </svg>
             </button>
+            <div id="password-strength" class="mt-2 text-sm"></div>
         </div>
 
         <!-- Rola użytkownika -->
@@ -51,6 +54,12 @@
             </select>
         </div>
 
+        <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
+            <input type="text" id="email" th:field="*{email}" required
+                   class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+        </div>
+
         <!-- Przycisk do zapisania danych oraz dodatkowe przyciski -->
         <div class="text-center flex space-x-4">
             <button type="submit"
@@ -60,10 +69,6 @@
             <button type="button" onclick="clearForm()"
                     class="w-full bg-gray-400 text-white p-2 rounded-md shadow-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50">
                 Wyczyść
-            </button>
-            <button type="button" onclick="deleteUser()"
-                    class="w-full bg-red-600 text-white p-2 rounded-md shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
-                Usuń użytkownika
             </button>
         </div>
     </form>
@@ -82,6 +87,28 @@
             passwordInput.type = 'password'; // Ukrywa hasło
             eyeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-.733 2.211-2.43 4.085-4.733 5.099M15 12a9.364 9.364 0 00-3 2.4"/>';
         }
+    }
+
+    function clearForm() {
+        document.querySelector('form').reset();
+    }
+
+    function checkPasswordStrength() {
+        const password = document.getElementById('password').value;
+        const strengthElement = document.getElementById('password-strength');
+        let strength = 'Słabe - nie akceptowalne';
+        let strengthColor = 'text-red-500';  // Czerwony dla słabych haseł
+
+        if (password.length > 4 && /[A-Z]/.test(password) && /\d/.test(password) && /[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+            strength = 'Silne';
+            strengthColor = 'text-green-500';  // Zielony dla silnych haseł
+        } else if (password.length > 6 && /[A-Z]/.test(password) && /\d/.test(password)) {
+            strength = 'Średnie';
+            strengthColor = 'text-yellow-500';  // Żółty dla średnich haseł
+        }
+
+        strengthElement.textContent = `Siła hasła: ${strength}`;
+        strengthElement.className = `mt-1 text-sm ${strengthColor}`;
     }
 </script>
 </body>

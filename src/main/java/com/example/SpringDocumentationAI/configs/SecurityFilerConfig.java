@@ -47,7 +47,8 @@ public class SecurityFilerConfig {
                         .xssProtection(HeadersConfigurer.XXssConfig::disable))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/swagger-ui/**", "/api-docs/**").hasRole("ADMIN")
-                        .requestMatchers("/login/**", "/register/**", "/authenticate", "/css/**", "/js/**", "/images/**", "/register-user").permitAll()
+                        .requestMatchers("/login/**", "/authenticate", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/register/**", "/register-user", "/register-success").permitAll()
                         .requestMatchers("/question", "/upload").authenticated()
                         .requestMatchers("/", "/api/chat/**", "/chat/**", "/load-data").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/download", "/download-faster", "/files-list").permitAll()

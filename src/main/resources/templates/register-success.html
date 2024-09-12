@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Rejestracja zakończona sukcesem</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/tailwind-built.css" rel="stylesheet">
+    <link href="/css/common-color.css" rel="stylesheet">
+    <link href="/css/register-success.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div class="message">
+        <h1>Rejestracja zakończona sukcesem!</h1>
+        <p>Na adres <span class="email" th:text="${email}"></span> został wysłany e-mail z linkiem aktywacyjnym.</p>
+        <p>Kliknij w link w e-mailu, aby aktywować swoje konto.</p>
+    </div>
+    <div class="button">
+        <form th:action="@{/login}" method="get">
+            <button type="submit">OK</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,6 +28,12 @@ public class DtoUser implements UserDetails {
     private String password;
     @Getter
     private String role;
+    private boolean enabled = false;
+    private boolean accountNonLocked = true;
+    @Getter
+    @NotEmpty(message = "Email nie może być pusty")
+    @Email(message = "Niepoprawny format adresu email")
+    private String email;
 
     public DtoUser(String username, String password, String role) {
         this.username = username;
@@ -50,22 +58,12 @@ public class DtoUser implements UserDetails {
     }
 
     @Override
-    public boolean isAccountNonExpired() {
-        return true; // Możesz dostosować logikę w zależności od wymagań
-    }
-
-    @Override
     public boolean isAccountNonLocked() {
-        return true; // Możesz dostosować logikę w zależności od wymagań
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true; // Możesz dostosować logikę w zależności od wymagań
+        return this.accountNonLocked; // Możesz dostosować logikę w zależności od wymagań
     }
 
     @Override
     public boolean isEnabled() {
-        return true; // Możesz dostosować logikę w zależności od wymagań
+        return this.enabled; // Możesz dostosować logikę w zależności od wymagań
     }
 }

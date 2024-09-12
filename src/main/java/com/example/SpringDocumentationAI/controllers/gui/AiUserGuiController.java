@@ -2,8 +2,11 @@ package com.example.SpringDocumentationAI.controllers.gui;
 
 import com.example.SpringDocumentationAI.model.DtoUser;
 import com.example.SpringDocumentationAI.services.AiUserService;
+import com.example.SpringDocumentationAI.services.MailService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,12 +19,25 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Optional;
+import java.util.regex.Pattern;
 
+@Slf4j
 @Controller
 public class AiUserGuiController {
 
+    private static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{5,}$";
+    private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
+    private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile(PASSWORD_REGEX);
+
     @Autowired
     private AiUserService aiUserService;
+
+    @Autowired
+    private MailService mailService;
+
+    @Value("${MAIL_SECRET}")
+    private String mailSecret;
 
     @GetMapping("/register-user")
     public String registerUser(Model model) {
@@ -52,23 +68,55 @@ public class AiUserGuiController {
 
     // Obsługa wysłania formularza
     @PostMapping("/register")
-    public String registerUser(@Valid @ModelAttribute("user") DtoUser user,  BindingResult result, Model model) {
-        // Sprawdzanie błędów walidacji
+    public String registerUser(@Valid @ModelAttribute("user") DtoUser user, BindingResult result, Model model) throws Exception {
         if (result.hasErrors()) {
-            // Jeżeli są błędy, wracamy do formularza
+            model.addAttribute("messageType", "error");
+            model.addAttribute("message", "Wystąpił błąd podczas rejestracji: " + result.getAllErrors());
             return "register-user";
         }
-
-        // Kodowanie hasła, jeśli potrzebne
-        // user.setPassword(bcryptPasswordEncoder.encode(user.getPassword()));
-
-        // Zapisujemy użytkownika
-        aiUserService.saveUser(user);
-
-        return "redirect:/success"; // Przekierowanie po sukcesie
+        if (aiUserService.findByUsername(user.getUsername()).isPresent()) {
+            DtoUser existingUser = aiUserService.findByUsername(user.getUsername()).get();
+            model.addAttribute("messageType", "error");
+            model.addAttribute("message", "Użytkownik o podanej nazwie już istnieje");
+            return "register-user";
+        }
+        if (aiUserService.findByEmail(user.getEmail()).isPresent()) {
+            DtoUser existingUser = aiUserService.findByEmail(user.getEmail()).get();
+            model.addAttribute("messageType", "error");
+            model.addAttribute("message", "Użytkownik o podanym adresie email już istnieje");
+            return "register-user";
+        }
+        if (!EMAIL_PATTERN.matcher(user.getEmail()).matches()) {
+            model.addAttribute("messageType", "error");
+            model.addAttribute("message", "Email ma nieprawidłowy format");
+            return "register-user";
+        }
+        if (!PASSWORD_PATTERN.matcher(user.getPassword()).matches()) {
+            model.addAttribute("messageType", "error");
+            model.addAttribute("message", "Hasło jest zbyt słabe. Musi zawierać co najmniej 5 znaków, jedną dużą literę, cyfrę i znak specjalny");
+            return "register-user";
+        }
+        String appName = System.getenv("HEROKU_APP_NAME");
+        if (appName == null) {
+            appName = "localhost:8080";
+        }
+        String link = "https://" + appName + "/confirm-registration?id=" + AiUserService.encrypt(user.getUsername(), mailSecret);
+        if (mailService.sendEmail(user.getEmail(),
+                "Potwierdzenie rejestracji Document AI Analizer",
+                "/templates/welcome-email-admin.html",
+                link)) {
+            log.info("Wysłano email z potwierdzeniem rejestracji");
+//            aiUserService.saveUser(user);
+            model.addAttribute("email", user.getEmail());
+            return "register-success"; // Przekierowanie po sukcesie
+        } else {
+            log.error("Błąd podczas wysyłania emaila z potwierdzeniem");
+            model.addAttribute("messageType", "error");
+            model.addAttribute("message", "Błąd podczas wysyłania emaila z potwierdzeniem");
+            return "register-user";
+        }
     }
 
-    // Pokazanie formularza edycji istniejącego użytkownika
     @GetMapping("/edit-user/{username}")
     public String showEditForm(@PathVariable("id") String username, Model model) {
         Optional<DtoUser> user = aiUserService.findByUsername(username);

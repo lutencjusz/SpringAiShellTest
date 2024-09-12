@@ -4,7 +4,6 @@ import com.example.SpringDocumentationAI.model.DtoUser;
 import com.example.SpringDocumentationAI.model.JwtLoginForm;
 import com.example.SpringDocumentationAI.services.AiUserService;
 import com.example.SpringDocumentationAI.services.JwtService;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

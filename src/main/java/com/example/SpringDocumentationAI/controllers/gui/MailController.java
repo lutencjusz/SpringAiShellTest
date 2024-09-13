@@ -31,7 +31,7 @@ public class MailController {
             DtoUser actualUser = user.get();
             actualUser.setEnabled(true);
             aiUserService.saveUser(actualUser);
-            return new RedirectView("/login");
+            return new RedirectView("/login?activation");
         } else {
             return new RedirectView("/login?unconfirmed");
         }

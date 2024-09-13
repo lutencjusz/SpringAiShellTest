@@ -52,13 +52,13 @@ public class SecurityFilerConfig {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/swagger-ui/**", "/api-docs/**").hasRole("ADMIN")
                         .requestMatchers("/login/**", "/authenticate", "/css/**", "/js/**", "/images/**").permitAll()
-                        .requestMatchers("/register/**", "/register-user", "/register-success").permitAll()
+                        .requestMatchers("/register/**", "/register-user", "/register-success", "/confirm-registration").permitAll()
                         .requestMatchers("/question", "/upload").authenticated()
                         .requestMatchers("/", "/api/chat/**", "/chat/**", "/load-data").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/download", "/download-faster", "/files-list").permitAll()
                         .anyRequest().authenticated())
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/register-user", "/upload", "/api/chat/**", "/chat/**", "/register", "/authenticate", "/question"))
+                        .ignoringRequestMatchers("/register-user", "/upload", "/api/chat/**", "/chat/**", "/register", "/authenticate", "/question", "/confirm-registration"))
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/", true)

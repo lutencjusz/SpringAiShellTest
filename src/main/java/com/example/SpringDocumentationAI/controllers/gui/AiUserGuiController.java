@@ -100,7 +100,7 @@ public class AiUserGuiController {
         if (appName == null) {
             appName = "localhost:8080";
         }
-        String link = "https://" + appName + "/confirm-registration?id=" + AiUserService.encrypt(user.getUsername(), mailSecret);
+        String link = "http://" + appName + "/confirm-registration?id=" + AiUserService.encrypt(user.getUsername(), mailSecret);
         if (mailService.sendEmail(user.getEmail(),
                 "Potwierdzenie rejestracji Document AI Analizer",
                 "/templates/welcome-email-admin.html",

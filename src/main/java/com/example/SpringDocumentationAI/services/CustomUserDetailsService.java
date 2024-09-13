@@ -21,12 +21,16 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<DtoUser> dtoUser = aiUserRepository.findByUsername(username);
         if (dtoUser.isEmpty()) {
-            throw new UsernameNotFoundException("User not found");
+            throw new UsernameNotFoundException("Użytkownik nie został znaleziony");
+        }
+        if (!dtoUser.get().isEnabled()) {
+            throw new UsernameNotFoundException("Użytkownik nie jest aktywny");
         }
         User user = new User(dtoUser.get().getUsername(), dtoUser.get().getPassword(), dtoUser.get().getAuthorities());
 
-        // Konwersja własnej encji User na UserDetails Spring Security
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getAuthorities());
+        return new org.springframework.security.core.userdetails.User(user.getUsername(),
+                user.getPassword(), dtoUser.get().isEnabled(), true, true, true, user.getAuthorities());
+
     }
 }
 

@@ -106,7 +106,7 @@ public class AiUserGuiController {
                 "/templates/welcome-email-admin.html",
                 link)) {
             log.info("Wysłano email z potwierdzeniem rejestracji");
-//            aiUserService.saveUser(user);
+            aiUserService.saveUser(user);
             model.addAttribute("email", user.getEmail());
             return "register-success"; // Przekierowanie po sukcesie
         } else {

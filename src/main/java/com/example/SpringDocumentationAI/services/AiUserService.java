@@ -33,6 +33,8 @@ public class AiUserService implements UserDetailsService {
                     .username(userObject.getUsername())
                     .password(userObject.getPassword())
                     .roles(getRoles(userObject))
+                    .accountLocked(!userObject.isAccountNonLocked())
+                    .disabled(!userObject.isEnabled())
                     .build();
         } else {
             throw new UsernameNotFoundException("Użytkownik nie istnieje");

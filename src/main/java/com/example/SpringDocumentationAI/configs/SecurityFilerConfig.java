@@ -1,5 +1,6 @@
 package com.example.SpringDocumentationAI.configs;
 
+import com.example.SpringDocumentationAI.CustomAuthenticationFailureHandler;
 import com.example.SpringDocumentationAI.services.AiUserService;
 import com.example.SpringDocumentationAI.services.CustomOAuth2UserService;
 import com.example.SpringDocumentationAI.services.CustomUserDetailsService;
@@ -27,6 +28,9 @@ public class SecurityFilerConfig {
 
     @Autowired
     private JwtAuthenticationFilterConfig jwtAuthenticationFilterConfig;
+
+    @Autowired
+    private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
@@ -58,13 +62,13 @@ public class SecurityFilerConfig {
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/", true)
+                        .failureHandler(customAuthenticationFailureHandler)
                         .permitAll())
                 .oauth2Login(oauth2login -> oauth2login
                         .loginPage("/login")
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService)) // Custom OAuth2UserService
-                        .successHandler((request, response, authentication) -> response.sendRedirect("/"))
-                        .failureHandler((request, response, exception) -> response.sendRedirect("/login")))
+                        .successHandler((request, response, authentication) -> response.sendRedirect("/")))
                 .addFilterBefore(jwtAuthenticationFilterConfig, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

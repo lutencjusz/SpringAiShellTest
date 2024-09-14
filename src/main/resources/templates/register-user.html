@@ -37,6 +37,13 @@
         <p class="ml-3 text-sm font-medium text-green-800" th:text="${message}"></p>
     </div>
 
+    <div id="message-container" class="hidden mt-4 rounded-md p-4 flex items-center">
+        <svg id="message-icon" class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
+            <path id="message-path" fill-rule="evenodd" clip-rule="evenodd"></path>
+        </svg>
+        <p id="message-text" class="ml-3 text-sm font-medium"></p>
+    </div>
+
     <form th:action="@{/register}" th:object="${user}" method="post" class="space-y-6">
         <div>
             <label for="username" class="block text-sm font-medium text-gray-700">Nazwa użytkownika:</label>
@@ -75,6 +82,10 @@
                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
         </div>
 
+        <p class="mt-6 text-center text-sm text-gray-500">
+            Zapomniałeś hasła?
+            <a href="#" onclick="sendPassword()" class="text-indigo-600 hover:text-indigo-500">Wysyłam link do zmiany hasła mejlem</a>
+        </p>
         <!-- Przycisk do zapisania danych oraz dodatkowe przyciski -->
         <div class="text-center flex space-x-4">
             <button type="submit"
@@ -124,6 +135,57 @@
 
         strengthElement.textContent = `Siła hasła: ${strength}`;
         strengthElement.className = `mt-1 text-sm ${strengthColor}`;
+    }
+
+   function sendPassword() {
+        const email = document.getElementById('email').value;
+        const messageContainer = document.getElementById('message-container');
+        const messageText = document.getElementById('message-text');
+        const messageIcon = document.getElementById('message-icon');
+        const messagePath = document.getElementById('message-path');
+
+        if (email == null || email === '') {
+            messageContainer.classList.remove('bg-green-50', 'hidden');
+            messageContainer.classList.add('bg-red-50');
+            messageIcon.classList.add('text-red-500');
+            messagePath.setAttribute('d', 'M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z');
+            messageText.textContent = 'Wprowadź adres email';
+            messageText.classList.add('text-red-800');
+            return;
+        }
+
+        fetch(`/reset-password?email=${email}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            if (response.ok) {
+                // Wyświetl komunikat sukcesu
+                messageContainer.classList.remove('bg-red-50', 'hidden');
+                messageContainer.classList.add('bg-green-50');
+                messageIcon.classList.add('text-green-500');
+                messagePath.setAttribute('d', 'M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z');
+                messageText.textContent = 'Link do zmiany hasła został wysłany na adres email';
+                messageText.classList.add('text-green-800');
+            } else {
+                // Wyświetl komunikat błędu
+                messageContainer.classList.remove('bg-green-50', 'hidden');
+                messageContainer.classList.add('bg-red-50');
+                messageIcon.classList.add('text-red-500');
+                messagePath.setAttribute('d', 'M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z');
+                messageText.textContent = 'Email jest nieprawidłowy lub użytkownik nieznany';
+                messageText.classList.add('text-red-800');
+            }
+        }).catch(error => {
+            // Obsługa błędów związanych z fetch
+            messageContainer.classList.remove('bg-green-50', 'hidden');
+            messageContainer.classList.add('bg-red-50');
+            messageIcon.classList.add('text-red-500');
+            messagePath.setAttribute('d', 'M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z');
+            messageText.textContent = 'Błąd sieci. Spróbuj ponownie.';
+            messageText.classList.add('text-red-800');
+        });
     }
 </script>
 </body>

@@ -16,7 +16,8 @@
         <p>Kliknij w link w e-mailu, aby aktywować swoje konto.</p>
     </div>
     <div class="button">
-        <form th:action="@{/login}" method="get">
+        <form th:action="@{/login}" th:method="get">
+            <input type="hidden" name="registersuccess">
             <button type="submit">OK</button>
         </form>
     </div>

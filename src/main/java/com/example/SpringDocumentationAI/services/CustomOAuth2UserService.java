@@ -49,7 +49,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService implements
             newUser.setUsername(email);
             newUser.setPassword("password");
             newUser.setRole("USER");
-            aiUserService.saveUser(newUser);
+            aiUserService.saveUserAndEncodePass(newUser);
         }
         return new CustomOAuth2User(newUser, oauth2User.getAttributes());
     }

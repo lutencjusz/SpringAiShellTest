@@ -33,7 +33,7 @@ public class AiUserController {
 //    @PostConstruct
     public void init() {
         DtoUser user = new DtoUser("admin", "admin123#", "ADMIN");
-        aiUserService.saveUser(user);
+        aiUserService.saveUserAndEncodePass(user);
     }
 
     @PostMapping("/authenticate")

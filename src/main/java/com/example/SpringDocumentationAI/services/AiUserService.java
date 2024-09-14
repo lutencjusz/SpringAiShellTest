@@ -57,7 +57,11 @@ public class AiUserService implements UserDetailsService {
     }
 
     // Metoda do dodawania nowego użytkownika
-    public DtoUser saveUser(DtoUser user) {
+    public DtoUser saveUser(DtoUser user) {// Szyfruj hasło przed zapisem
+        return aiUserRepository.save(user);
+    }
+
+    public DtoUser saveUserAndEncodePass(DtoUser user) {
         user.setPassword(passwordEncoder.encode(user.getPassword())); // Szyfruj hasło przed zapisem
         return aiUserRepository.save(user);
     }

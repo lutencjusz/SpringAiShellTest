@@ -103,10 +103,10 @@ public class AiUserGuiController {
         String link = "http://" + appName + "/confirm-registration?id=" + AiUserService.encrypt(user.getUsername(), mailSecret);
         if (mailService.sendEmail(user.getEmail(),
                 "Potwierdzenie rejestracji Document AI Analizer",
-                "/templates/welcome-email-admin.html",
+                "/templates/welcome-email.html",
                 link)) {
             log.info("Wysłano email z potwierdzeniem rejestracji");
-            aiUserService.saveUser(user);
+            aiUserService.saveUserAndEncodePass(user);
             model.addAttribute("email", user.getEmail());
             return "register-success"; // Przekierowanie po sukcesie
         } else {

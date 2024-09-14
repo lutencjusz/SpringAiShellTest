@@ -10,9 +10,9 @@
     <link href="/css/tailwind-built.css" rel="stylesheet">
 </head>
 <body>
-<div th:fragment="responseFragment" class="mb-8">
-    <div class="inline-block bg-slate-100 rounded-lg p-2" th:text="${message}">Message</div>
-    <p class="mt-4 h-full overflow-auto" th:text="${response}">Response</p>
-    <div class="text-gray-600 text-sm mb-2 text-right" th:text="'Czas oczekiwania na odpowiedź: ' + ${timeElapsed} + ' ms'">Czas oczekiwania: 0 ms</div>
+<div th:fragment="responseFragment" class="mb-4">
+    <div class="mb-4 inline-block bg-slate-200 text-gray-800 rounded-lg p-2" th:text="${message}">Message</div>
+    <p class="mt-4 h-full text-gray-800 overflow-auto" th:text="${response}">Response</p>
+    <div class="text-gray-800 text-sm mb-2 text-right" th:text="'Czas oczekiwania na odpowiedź: ' + ${timeElapsed} + ' ms'">Czas oczekiwania: 0 ms</div>
 </div>
 </body>

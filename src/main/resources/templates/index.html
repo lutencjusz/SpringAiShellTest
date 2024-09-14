@@ -12,6 +12,13 @@
     <link href="/css/tailwind-built.css" rel="stylesheet">
     <link href="/css/index.css" rel="stylesheet">
     <link href="/css/common-color.css" rel="stylesheet">
+    <!-- Include a Markdown rendering library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+    <style>
+        .markdown-body {
+            background-color: #f5f5f5; /* Set background color for markdown space */
+        }
+    </style>
 </head>
 <body class="bg-gray-100">
 <div class="flex h-full">
@@ -31,7 +38,7 @@
     </section>
     <!-- Main Content -->
     <main class="flex flex-col bg-white p-4 w-full max-w-full">
-        <div id="response-container" class="flex-1 mb-4 p-4 h-full overflow-auto">
+        <div id="response-container" class="flex-1 mb-4 p-4 h-full overflow-auto markdown-body rounded-lg">
         </div>
         <div class="">
             <form id="chatForm"
@@ -41,6 +48,11 @@
                   hx-target="#response-container">
                 <div class="flex items-center bg-gray-200 rounded-full p-2 shadow-md">
                     <input id="message" name="message" class="bg-gray-200 outline-none text-gray-700 rounded-full py-2 px-4 w-full" type="text" placeholder="Zadaj pytanie do asystenta">
+                    <button type="button" id="clearButton" class="bg-red-300 hover:bg-red-400 text-gray-600 rounded-full p-2 ml-2">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
                     <button type="submit" class="bg-gray-300 hover:bg-gray-400 text-gray-600 rounded-full p-2 ml-2">
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
@@ -83,6 +95,8 @@
     const menuButton = document.getElementById('menuButton');
     const menuModal = document.getElementById('menuModal');
     const closeMenuModal = document.getElementById('closeMenuModal');
+    const clearButton = document.getElementById('clearButton');
+    const messageInput = document.getElementById('message');
 
     menuButton.addEventListener('click', function () {
         menuModal.style.display = 'flex';  // Show modal
@@ -98,7 +112,11 @@
             menuModal.style.display = 'none';
         }
     });
+
+    // JavaScript to clear the message input field
+    clearButton.addEventListener('click', function () {
+        messageInput.value = '';  // Clear the input field
+    });
 </script>
 </body>
 </html>
-

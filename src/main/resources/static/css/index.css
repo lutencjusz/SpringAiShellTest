@@ -54,3 +54,8 @@
             font-weight: bold;
         }
 
+        .markdown-body {
+            background-color: #f5f5f5; /* Set background color for markdown space */
+            color: --var(text-color); /* Set text color for markdown space */
+        }
+

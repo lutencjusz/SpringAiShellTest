@@ -15,10 +15,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Slf4j
@@ -70,30 +68,19 @@ public class AiUserGuiController {
     @PostMapping("/register")
     public String registerUser(@Valid @ModelAttribute("user") DtoUser user, BindingResult result, Model model) throws Exception {
         if (result.hasErrors()) {
-            model.addAttribute("messageType", "error");
-            model.addAttribute("message", "Wystąpił błąd podczas rejestracji: " + result.getAllErrors());
-            return "register-user";
-        }
-        if (aiUserService.findByUsername(user.getUsername()).isPresent()) {
+            model.addAttribute("error", "Wystąpił błąd podczas rejestracji: " + result.getAllErrors());
+        } else if (aiUserService.findByUsername(user.getUsername()).isPresent()) {
             DtoUser existingUser = aiUserService.findByUsername(user.getUsername()).get();
-            model.addAttribute("messageType", "error");
-            model.addAttribute("message", "Użytkownik o podanej nazwie już istnieje");
-            return "register-user";
-        }
-        if (aiUserService.findByEmail(user.getEmail()).isPresent()) {
+            model.addAttribute("error", "Użytkownik o podanej nazwie już istnieje");
+        } else if (aiUserService.findByEmail(user.getEmail()).isPresent()) {
             DtoUser existingUser = aiUserService.findByEmail(user.getEmail()).get();
-            model.addAttribute("messageType", "error");
-            model.addAttribute("message", "Użytkownik o podanym adresie email już istnieje");
-            return "register-user";
+            model.addAttribute("error", "Użytkownik o podanym adresie email już istnieje");
+        } else if (!EMAIL_PATTERN.matcher(user.getEmail()).matches()) {
+            model.addAttribute("error", "Email ma nieprawidłowy format");
+        } else if (!PASSWORD_PATTERN.matcher(user.getPassword()).matches()) {
+            model.addAttribute("error", "Hasło jest zbyt słabe. Musi zawierać co najmniej 5 znaków, jedną dużą literę, cyfrę i znak specjalny");
         }
-        if (!EMAIL_PATTERN.matcher(user.getEmail()).matches()) {
-            model.addAttribute("messageType", "error");
-            model.addAttribute("message", "Email ma nieprawidłowy format");
-            return "register-user";
-        }
-        if (!PASSWORD_PATTERN.matcher(user.getPassword()).matches()) {
-            model.addAttribute("messageType", "error");
-            model.addAttribute("message", "Hasło jest zbyt słabe. Musi zawierać co najmniej 5 znaków, jedną dużą literę, cyfrę i znak specjalny");
+        if (model.containsAttribute("error")) {
             return "register-user";
         }
         String appName = System.getenv("HEROKU_APP_NAME");
@@ -116,24 +103,4 @@ public class AiUserGuiController {
             return "register-user";
         }
     }
-
-    @GetMapping("/edit-user/{username}")
-    public String showEditForm(@PathVariable("id") String username, Model model) {
-        Optional<DtoUser> user = aiUserService.findByUsername(username);
-        if (user.isEmpty()) {
-            return "error";
-        }
-        model.addAttribute("user", user.get());// Przekazanie użytkownika do formularza
-        return "register-user"; // Używamy tego samego formularza dla edycji
-    }
-
-    @PostMapping("/edit-user")
-    public String updateUser(@ModelAttribute("user") DtoUser user) {
-        // Kodowanie hasła jeśli hasło zostało zmienione
-        // user.setPassword(bcryptPasswordEncoder.encode(user.getPassword()));
-
-        aiUserService.saveUser(user); // Zapisz zmiany użytkownika
-        return "redirect:/success";
-    }
-
 }

@@ -51,6 +51,14 @@
                 </svg>
                 <p class="ml-3 text-sm font-medium text-green-800">Rejestracja prawidłowa, zatwierdź email</p>
             </div>
+            <div th:if="${param.changepasswordsuccess}" class="rounded-md bg-green-50 p-4 flex items-center">
+                <svg class="h-6 w-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                          clip-rule="evenodd"/>
+                </svg>
+                <p class="ml-3 text-sm font-medium text-green-800">Wysłano email, żeby zmienić hasło</p>
+            </div>
             <div th:if="${param.activation}" class="rounded-md bg-green-50 p-4 flex items-center">
                 <svg class="h-6 w-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd"
@@ -99,10 +107,23 @@
                                   d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-.733 2.211-2.43 4.085-4.733 5.099M15 12a9.364 9.364 0 00-3 2.4"/>
                         </svg>
                     </button>
+                    <div id="password-strength" class="mt-2 text-sm"></div>
                 </div>
 
                 <div class="flex items-center justify-between">
-                    <a href="#" class="text-sm text-indigo-600 hover:text-indigo-500">Zapomniałeś hasła?</a>
+                    <!-- Dodaj onClick aby wyświetlić pole email -->
+                    <a href="javascript:void(0)" class="text-sm text-indigo-600 hover:text-indigo-500" onclick="showEmailField()">Zapomniałeś hasła?</a>
+                </div>
+
+                <!-- Ukryte pole e-mail, które się pojawi po kliknięciu "Zapomniałeś hasła?" -->
+                <div id="forgot-password-email" class="hidden">
+                    <label for="forgotEmail" class="block text-sm font-medium text-gray-700">Podaj adres email</label>
+                    <input id="forgotEmail" name="email" type="email"
+                           class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <button type="button" onclick="submitForgotPassword()"
+                            class="mt-2 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Wyślij link do zmiany hasła
+                    </button>
                 </div>
 
                 <div>
@@ -113,7 +134,7 @@
                 </div>
             </form>
 
-            <!-- Przycisk logowania z Google -->
+            <!-- Logowanie przez Google -->
             <div class="mt-6">
                 <div class="flex items-center justify-center">
                     <span class="text-sm text-gray-500">lub</span>
@@ -134,7 +155,8 @@
         </div>
     </div>
 </div>
-<!-- JavaScript do przełączania widoczności hasła -->
+
+<!-- JavaScript -->
 <script>
     function togglePassword() {
         const passwordInput = document.getElementById('password');
@@ -148,7 +170,36 @@
             eyeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-.733 2.211-2.43 4.085-4.733 5.099M15 12a9.364 9.364 0 00-3 2.4"/>';
         }
     }
+
+    function showEmailField() {
+        const emailField = document.getElementById('forgot-password-email');
+        emailField.classList.remove('hidden'); // Pokazuje ukryte pole email
+    }
+
+    function submitForgotPassword() {
+        const email = document.getElementById('forgotEmail').value;
+        if (email) {
+            fetch(`/reset-password?email=${email}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    window.location.href = '/login?changepasswordsuccess';
+                } else {
+                    window.location.href = '/login?changepassworderror';
+                }
+            }).catch(error => {
+                window.location.href = '/login?changepassworderror';
+            });
+        } else {
+            alert('Proszę podać adres e-mail.');
+        }
+    }
 </script>
+
 </body>
 </html>
+
 

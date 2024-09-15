@@ -58,7 +58,7 @@ public class SecurityFilerConfig {
                         .requestMatchers("/download", "/download-faster", "/files-list", "/delete-file/**", "/load-data/**").hasAnyRole( "ADMIN")
                         .anyRequest().authenticated())
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/delete-file/**", "/change-password/**", "/reset-password/**", "/register-user", "/upload", "/api/chat/**", "/chat/**", "/register", "/authenticate", "/question", "/confirm-registration"))
+                        .ignoringRequestMatchers("/files-list", "/load-data/**", "/delete-file/**", "/change-password/**", "/reset-password/**", "/register-user", "/upload", "/api/chat/**", "/chat/**", "/register", "/authenticate", "/question", "/confirm-registration"))
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/", true)

@@ -9,17 +9,18 @@
     <link href="/css/register-user.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 flex items-center justify-center h-screen">
-<div class="bg-white shadow-md rounded-lg p-8 max-w-lg w-full">
+<div class="bg-white shadow-md rounded p-8 max-w-lg w-full">
     <div class="header flex items-center">
-        <a href="/" class="bg-gray-300 hover:bg-gray-400 text-gray-600 rounded-full p-2 ml-1">
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <a href="/" class="bg-gray-300 hover:bg-gray-400 text-gray-600 rounded p-2 ml-1">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                 xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l-7 7 7 7"></path>
             </svg>
         </a>
         <h1 id="userFormTitle" class="font-bold text-xl flex-1 text-center">Formularz Użytkownika</h1>
     </div>
 
-    <div th:if="${error}" class="mt-4 rounded-md bg-red-50 p-4 flex items-center">
+    <div th:if="${error}" class="mt-4 rounded bg-red-50 p-4 flex items-center">
         <svg class="h-6 w-6 text-red-500" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
@@ -28,7 +29,7 @@
         <p class="ml-3 text-sm font-medium text-red-800" th:text="${error}"></p>
     </div>
 
-    <div th:if="${success}" class="mt-4 rounded-md bg-green-50 p-4 flex items-center">
+    <div th:if="${success}" class="mt-4 rounded bg-green-50 p-4 flex items-center">
         <svg class="h-6 w-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
@@ -37,7 +38,7 @@
         <p class="ml-3 text-sm font-medium text-green-800" th:text="${success}"></p>
     </div>
 
-    <div id="message-container" class="hidden mt-4 rounded-md p-4 flex items-center">
+    <div id="message-container" class="hidden mt-4 rounded p-4 flex items-center">
         <svg id="message-icon" class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
             <path id="message-path" fill-rule="evenodd" clip-rule="evenodd"></path>
         </svg>
@@ -48,19 +49,23 @@
         <div>
             <label for="username" class="block text-sm font-medium text-gray-700">Nazwa użytkownika:</label>
             <input type="text" id="username" th:field="*{username}" required
-                   class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                   class="mt-1 block w-full p-2 border border-gray-300 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
         </div>
 
         <!-- Hasło użytkownika -->
         <div class="relative">
             <label for="password" class="block text-sm font-medium text-gray-700">Hasło:</label>
             <input type="password" id="password" th:field="*{password}" required
-                   class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                   class="mt-1 block w-full p-2 border border-gray-300 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                    oninput="checkPasswordStrength()"/>
-            <button type="button" onclick="togglePassword()" class="absolute inset-y-10 right-0 pr-3 flex items-center text-sm leading-5">
-                <svg id="eye-icon" class="h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-.733 2.211-2.43 4.085-4.733 5.099M15 12a9.364 9.364 0 00-3 2.4" />
+            <button type="button" onclick="togglePassword()"
+                    class="absolute inset-y-10 right-0 pr-3 flex items-center text-sm leading-5">
+                <svg id="eye-icon" class="h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                     viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-.733 2.211-2.43 4.085-4.733 5.099M15 12a9.364 9.364 0 00-3 2.4"/>
                 </svg>
             </button>
             <div id="password-strength" class="mt-2 text-sm"></div>
@@ -70,30 +75,31 @@
         <div>
             <label for="role" class="block text-sm font-medium text-gray-700">Rola użytkownika:</label>
             <select id="role" th:field="*{role}" required
-                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 <option value="USER">USER</option>
-                <option value="ADMIN">ADMIN</option>
+                <!--                <option value="ADMIN">ADMIN</option>-->
             </select>
         </div>
 
         <div>
             <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
             <input type="text" id="email" th:field="*{email}" required
-                   class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                   class="mt-1 block w-full p-2 border border-gray-300 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
         </div>
 
         <p class="mt-6 text-center text-sm text-gray-500">
             Zapomniałeś hasła?
-            <a href="#" onclick="sendPassword()" class="text-indigo-600 hover:text-indigo-500">Wysyłam link do zmiany hasła mejlem</a>
+            <a href="#" onclick="sendPassword()" class="text-indigo-600 hover:text-indigo-500">Wysyłam link do zmiany
+                hasła mejlem</a>
         </p>
         <!-- Przycisk do zapisania danych oraz dodatkowe przyciski -->
         <div class="text-center flex space-x-4">
             <button type="submit"
-                    class="w-full bg-indigo-600 text-white p-2 rounded-md shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
+                    class="w-full bg-indigo-600 text-white p-2 rounded shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
                 Zapisz
             </button>
             <button type="button" onclick="clearForm()"
-                    class="w-full bg-gray-400 text-white p-2 rounded-md shadow-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50">
+                    class="w-full bg-gray-400 text-white p-2 rounded shadow-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50">
                 Wyczyść
             </button>
         </div>

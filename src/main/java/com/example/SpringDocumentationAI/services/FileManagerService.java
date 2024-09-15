@@ -56,4 +56,16 @@ public class FileManagerService {
         }
         return List.of(Objects.requireNonNull(file.list()));
     }
+
+    public void deleteFile(String fileName) throws IOException {
+        final String absoluteUploadPath = new File("").getAbsolutePath() + File.separator + sourcePath;
+        File fileToDelete = new File(absoluteUploadPath + File.separator + fileName);
+        if (!fileToDelete.exists()) {
+            throw new IOException("Plik '" + fileName + "' nie istnieje");
+        }
+        if (!Objects.equals(fileToDelete.getParentFile().toString(), absoluteUploadPath)) {
+            throw new SecurityException("Błąd usuwania pliku");
+        }
+        Files.delete(fileToDelete.toPath());
+    }
 }

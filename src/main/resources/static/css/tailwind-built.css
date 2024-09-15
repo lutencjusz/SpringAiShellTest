@@ -2214,6 +2214,10 @@ video {
   padding-bottom: 2rem;
 }
 
+.pl-2 {
+  padding-left: 0.5rem;
+}
+
 .pr-3 {
   padding-right: 0.75rem;
 }

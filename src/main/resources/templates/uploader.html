@@ -12,8 +12,9 @@
 <body>
 <div class="container">
     <div class="header flex items-center">
-        <a href="/" class="bg-gray-300 hover:bg-gray-400 text-gray-600 rounded-full p-2 ml-1">
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <a href="/" class="bg-gray-300 hover:bg-gray-400 text-gray-600 rounded p-2 ml-1">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                 xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l-7 7 7 7"></path>
             </svg>
         </a>
@@ -39,19 +40,28 @@
         <thead class="bg-gray-100">
         <tr>
             <th class="border px-4 py-2 text-left">#</th>
-            <th class="border px-4 py-2 text-left">File Name</th>
+            <th class="border px-4 py-2 text-left">Nazwa pliku</th>
+            <th class="border pl-2 text-left"></th>
         </tr>
         </thead>
         <tbody id="file-list">
-        <!-- Użycie poprawnej składni dla iteracji -->
         <tr th:each="file, iterStat : ${files}">
-            <!-- Numeracja plików -->
             <td class="border px-4 py-2">
                 <span th:text="${iterStat.index + 1}"></span>
             </td>
-            <!-- Nazwa pliku w jednej linii -->
             <td class="border px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">
                 <a th:href="@{/download-faster(fileName=${file})}" th:text="${file}"></a>
+            </td>
+            <!-- Dodaj przycisk usuwania -->
+            <td class="border px-4 py-2 text-center">
+                <button class="delete-button bg-red-300 hover:bg-red-400 text-grey-600 rounded p-2 ml-2"
+                        data-file-name="${file}">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
             </td>
         </tr>
         </tbody>
@@ -99,45 +109,100 @@
             document.getElementById('message').innerText = 'Błąd: ' + error.message;
         });
     });
-    function updateFileList() {
-            fetch('/files-list')
-            .then(response => response.json())
-            .then(files => {
-                const fileList = document.getElementById('file-list');
-                fileList.innerHTML = '';
-                files.length === 0 ? document.getElementById('available-files-label').innerText = 'Brak dostępnych plików' : document.getElementById('available-files-label').innerText = 'Dostępne pliki';
-                if (files.length == 1) document.getElementById('available-files-label').innerText = 'Dostępny plik';
-                files.forEach((file, index) => {
-                    // Tworzenie wiersza tabeli <tr>
-                    const tr = document.createElement('tr');
 
-                    // Kolumna z numeracją
-                    const numberCell = document.createElement('td');
-                    numberCell.className = 'border px-4 py-2';
-                    numberCell.textContent = index + 1; // Numeracja zaczyna się od 1
-                    tr.appendChild(numberCell);
+function updateFileList() {
+    fetch('/files-list')
+        .then(response => response.json())
+        .then(files => {
+            const fileList = document.getElementById('file-list');
+            fileList.innerHTML = '';
 
-                    // Kolumna z nazwą pliku
-                    const fileNameCell = document.createElement('td');
-                    fileNameCell.className = 'border px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis';
+            // Ustawienie etykiety w zależności od ilości plików
+            if (files.length === 0) {
+                document.getElementById('available-files-label').innerText = 'Brak dostępnych plików';
+            } else if (files.length === 1) {
+                document.getElementById('available-files-label').innerText = 'Dostępny plik';
+            } else {
+                document.getElementById('available-files-label').innerText = 'Dostępne pliki';
+            }
 
-                    const a = document.createElement('a');
-                    a.href = `/download-faster?fileName=${file}`;
-                    a.textContent = file; // Nazwa pliku
-                    fileNameCell.appendChild(a);
-                    tr.appendChild(fileNameCell);
+            // Iteracja przez każdy plik
+            files.forEach((file, index) => {
+                const tr = document.createElement('tr');
 
-                    // Dodanie wiersza do tbody
-                    fileList.appendChild(tr);
-                });
+                // Kolumna z numeracją
+                const numberCell = document.createElement('td');
+                numberCell.className = 'border px-4 py-2';
+                numberCell.textContent = index + 1;
+                tr.appendChild(numberCell);
+
+                // Kolumna z nazwą pliku
+                const fileNameCell = document.createElement('td');
+                fileNameCell.className = 'border px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis';
+                const a = document.createElement('a');
+                a.href = `/download-faster?fileName=${file}`;
+                a.textContent = file;
+                fileNameCell.appendChild(a);
+                tr.appendChild(fileNameCell);
+
+                // Kolumna z przyciskiem usuwania
+                const deleteCell = document.createElement('td');
+                deleteCell.className = 'border px-4 py-2';
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'delete-button bg-red-300 hover:bg-red-400 text-grey-600 rounded p-2 ml-2';
+                deleteButton.setAttribute('data-file-name', file);
+                const deleteIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                deleteIcon.setAttribute('class', 'h-5 w-5');
+                deleteIcon.setAttribute('fill', 'none');
+                deleteIcon.setAttribute('stroke', 'currentColor');
+                deleteIcon.setAttribute('viewBox', '0 0 24 24');
+                const deletePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                deletePath.setAttribute('stroke-linecap', 'round');
+                deletePath.setAttribute('stroke-linejoin', 'round');
+                deletePath.setAttribute('stroke-width', '2');
+                deletePath.setAttribute('d', 'M6 18L18 6M6 6l12 12');
+                deleteIcon.appendChild(deletePath);
+                deleteButton.appendChild(deleteIcon);
+                deleteCell.appendChild(deleteButton);
+                tr.appendChild(deleteCell);
+
+                // Dodanie wiersza do tbody
+                fileList.appendChild(tr);
+            });
+        })
+        .catch(error => {
+            console.error('Błąd przy pobieraniu listy plików:', error);
+        });
+}
+
+// Pobierz listę plików przy ładowaniu strony
+updateFileList();
+
+// Obsługa usuwania plików
+document.getElementById('file-list').addEventListener('click', function(event) {
+    if (event.target.closest('.delete-button')) {
+        const fileName = event.target.closest('.delete-button').getAttribute('data-file-name');
+
+            fetch(`/delete-file?fileName=${fileName}`, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('message').style.color = 'green';
+                    document.getElementById('message').innerText = 'Plik usunięty pomyślnie!';
+                    updateFileList(); // Odśwież listę plików
+                } else {
+                    document.getElementById('message').style.color = 'red';
+                    document.getElementById('message').innerText = 'Nie udało się usunąć pliku.';
+                }
             })
             .catch(error => {
-                console.error('Error fetching file list:', error);
+                document.getElementById('message').style.color = 'red';
+                document.getElementById('message').innerText = 'Błąd: ' + error.message;
             });
-        }
+    }
+});
 
-        // Pobierz listę plików przy ładowaniu strony
-        updateFileList();
 </script>
 </body>
 </html>

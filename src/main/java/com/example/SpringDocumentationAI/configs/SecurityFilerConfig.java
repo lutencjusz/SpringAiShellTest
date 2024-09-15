@@ -52,13 +52,13 @@ public class SecurityFilerConfig {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/swagger-ui/**", "/api-docs/**").hasRole("ADMIN")
                         .requestMatchers("/login/**", "/authenticate", "/css/**", "/js/**", "/images/**").permitAll()
-                        .requestMatchers("/register/**", "/register-user", "/register-success", "/confirm-registration","/reset-password/**","/change-password/**").permitAll()
+                        .requestMatchers("/register/**", "/register-user", "/register-success", "/confirm-registration", "/reset-password/**", "/change-password/**").permitAll()
                         .requestMatchers("/question", "/upload").authenticated()
-                        .requestMatchers("/", "/api/chat/**", "/chat/**", "/load-data").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/download", "/download-faster", "/files-list").permitAll()
+                        .requestMatchers("/", "/api/chat/**", "/chat/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/download", "/download-faster", "/files-list", "/delete-file/**", "/load-data/**").hasAnyRole( "ADMIN")
                         .anyRequest().authenticated())
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/change-password/**","/reset-password/**","/register-user", "/upload", "/api/chat/**", "/chat/**", "/register", "/authenticate", "/question", "/confirm-registration"))
+                        .ignoringRequestMatchers("/delete-file/**", "/change-password/**", "/reset-password/**", "/register-user", "/upload", "/api/chat/**", "/chat/**", "/register", "/authenticate", "/question", "/confirm-registration"))
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/", true)

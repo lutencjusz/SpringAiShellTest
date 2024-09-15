@@ -10,8 +10,8 @@
     <title>AI document analizer</title>
     <script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2" crossorigin="anonymous"></script>
     <link href="/css/tailwind-built.css" rel="stylesheet">
-    <link href="/css/index.css" rel="stylesheet">
     <link href="/css/common-color.css" rel="stylesheet">
+    <link href="/css/index.css" rel="stylesheet">
     <!-- Include a Markdown rendering library -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
     <style>
@@ -31,34 +31,35 @@
         </div>
         <!-- Logout Button -->
         <div class="logout mt-auto -mt-5">
-            <a href="/login" class="block text-center bg-gray-300 hover:bg-gray-400 rounded-full py-2 px-4 mb-2 shadow-md">
+            <a href="/login" class="block text-center bg-gray-300 hover:bg-gray-400 rounded py-2 px-4 mb-2 shadow-md">
                 Wyloguj się
             </a>
         </div>
     </section>
     <!-- Main Content -->
     <main class="flex flex-col bg-white p-4 w-full max-w-full">
-        <div id="response-container" class="flex-1 mb-4 p-4 h-full overflow-auto markdown-body rounded-lg">
-        </div>
+        <div id="response-container" class="flex-1 mb-4 p-4 h-full overflow-auto markdown-body rounded"></div>
         <div class="">
             <form id="chatForm"
                   class="w-full"
                   hx-post="/api/chat"
                   hx-swap="beforeend"
                   hx-target="#response-container">
-                <div class="flex items-center bg-gray-200 rounded-full p-2 shadow-md">
-                    <input id="message" name="message" class="bg-gray-200 outline-none text-gray-700 rounded-full py-2 px-4 w-full" type="text" placeholder="Zadaj pytanie do asystenta">
-                    <button type="button" id="clearButton" class="bg-red-300 hover:bg-red-400 text-gray-600 rounded-full p-2 ml-2">
+                <div class="flex items-center bg-gray-200 rounded p-2 shadow-md">
+    <textarea id="message" name="message" class="bg-gray-200 outline-none text-gray-700 rounded py-2 px-4 w-full resize-none overflow-hidden"
+              placeholder="Zadaj pytanie do asystenta" rows="1"></textarea>
+                    <button type="button" id="clearButton" class="bg-red-300 hover:bg-red-400 text-gray-600 rounded p-2 ml-2">
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
                     </button>
-                    <button type="submit" class="bg-gray-300 hover:bg-gray-400 text-gray-600 rounded-full p-2 ml-2">
+                    <button type="submit" class="bg-gray-300 hover:bg-gray-400 text-gray-600 rounded p-2 ml-2">
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
                         </svg>
                     </button>
                 </div>
+
             </form>
         </div>
     </main>
@@ -74,13 +75,18 @@
             <div class="modal-header">Menu</div>
             <ul class="space-y-4">
                 <li>
-                    <a href="/load-data" class="block text-gray-700 hover:bg-gray-300 rounded-lg p-2">
+                    <a href="/load-data" class="block text-gray-700 hover:bg-gray-300 rounded p-2">
                         Ładowanie danych
                     </a>
                 </li>
                 <li>
-                    <a href="/register-user" class="block text-gray-700 hover:bg-gray-300 rounded-lg p-2">
+                    <a href="/register-user" class="block text-gray-700 hover:bg-gray-300 rounded p-2">
                         Zarządzanie użytkownikiem
+                    </a>
+                </li>
+                <li>
+                    <a href="/login" class="block text-gray-700 hover:bg-gray-300 rounded p-2">
+                        Wyloguj się
                     </a>
                 </li>
             </ul>
@@ -116,6 +122,11 @@
     // JavaScript to clear the message input field
     clearButton.addEventListener('click', function () {
         messageInput.value = '';  // Clear the input field
+    });
+
+    messageInput.addEventListener('input', function () {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
     });
 </script>
 </body>

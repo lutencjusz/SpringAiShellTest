@@ -11,7 +11,7 @@
 </head>
 <body class="min-h-screen">
 <div class="flex min-h-full flex-col justify-center items-center px-6">
-    <div class="bg-white shadow-lg rounded-lg sm:max-w-md sm:w-full p-8">
+    <div class="bg-white shadow-lg rounded-md sm:max-w-md sm:w-full p-8">
         <div class="text-center">
             <img class="mx-auto h-12 w-auto" src="/images/favicon.png" alt="Sopim">
             <h2 class="mt-6 text-3xl font-extrabold text-gray-900">Logowanie do konta</h2>
@@ -19,7 +19,7 @@
 
         <div class="mt-8 space-y-6">
             <!-- Błąd logowania -->
-            <div th:if="${param.error}" class="rounded-md bg-red-50 p-4 flex items-center">
+            <div th:if="${param.error}" class="rounded bg-red-50 p-4 flex items-center">
                 <svg class="h-6 w-6 text-red-500" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd"
                           d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
@@ -27,7 +27,7 @@
                 </svg>
                 <p class="ml-3 text-sm font-medium text-red-800">Nieprawidłowa nazwa użytkownika lub hasło</p>
             </div>
-            <div th:if="${param.unconfirmed}" class="rounded-md bg-red-50 p-4 flex items-center">
+            <div th:if="${param.unconfirmed}" class="rounded bg-red-50 p-4 flex items-center">
                 <svg class="h-6 w-6 text-red-500" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd"
                           d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
@@ -35,7 +35,7 @@
                 </svg>
                 <p class="ml-3 text-sm font-medium text-red-800">Użytkownik nie jest znany</p>
             </div>
-            <div th:if="${param.confirmed}" class="rounded-md bg-green-50 p-4 flex items-center">
+            <div th:if="${param.confirmed}" class="rounded bg-green-50 p-4 flex items-center">
                 <svg class="h-6 w-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd"
                           d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
@@ -43,7 +43,7 @@
                 </svg>
                 <p class="ml-3 text-sm font-medium text-green-800">Użytkownik jest już zweryfikowany</p>
             </div>
-            <div th:if="${param.registersuccess}" class="rounded-md bg-green-50 p-4 flex items-center">
+            <div th:if="${param.registersuccess}" class="rounded bg-green-50 p-4 flex items-center">
                 <svg class="h-6 w-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd"
                           d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
@@ -51,52 +51,18 @@
                 </svg>
                 <p class="ml-3 text-sm font-medium text-green-800">Rejestracja prawidłowa, zatwierdź email</p>
             </div>
-            <div th:if="${param.changepasswordsuccess}" class="rounded-md bg-green-50 p-4 flex items-center">
-                <svg class="h-6 w-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                          clip-rule="evenodd"/>
-                </svg>
-                <p class="ml-3 text-sm font-medium text-green-800">Wysłano email, żeby zmienić hasło</p>
-            </div>
-            <div th:if="${param.activation}" class="rounded-md bg-green-50 p-4 flex items-center">
-                <svg class="h-6 w-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                          clip-rule="evenodd"/>
-                </svg>
-                <p class="ml-3 text-sm font-medium text-green-800">Użytkownik prawidłowo aktywowany</p>
-            </div>
-            <div th:if="${param.passwordChanged}" class="rounded-md bg-green-50 p-4 flex items-center">
-                <svg class="h-6 w-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                          clip-rule="evenodd"/>
-                </svg>
-                <p class="ml-3 text-sm font-medium text-green-800">Hasło zostało zmienione</p>
-            </div>
 
-            <div th:if="${param.disable}" class="rounded-md bg-red-50 p-4 flex items-center">
-                <svg class="h-6 w-6 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
-                          clip-rule="evenodd"/>
-                </svg>
-                <p class="ml-3 text-sm font-medium text-red-800">Użytkownik nie jest aktywny</p>
-            </div>
-
-            <!-- Formularz logowania -->
             <form class="space-y-6" th:action="@{/login}" method="POST">
                 <div>
                     <label for="username" class="block text-sm font-medium text-gray-700">Nazwa użytkownika</label>
                     <input id="username" name="username" type="text" required
-                           class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                           class="mt-1 block w-full p-2 border border-gray-300 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 </div>
 
                 <div class="relative">
                     <label for="password" class="block text-sm font-medium text-gray-700">Hasło</label>
                     <input id="password" name="password" type="password" required
-                           class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                           class="mt-1 block w-full p-2 border border-gray-300 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     <button type="button" onclick="togglePassword()"
                             class="absolute inset-y-10 right-0 pr-3 flex items-center text-sm leading-5">
                         <svg id="eye-icon" class="h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -111,7 +77,6 @@
                 </div>
 
                 <div class="flex items-center justify-between">
-                    <!-- Dodaj onClick aby wyświetlić pole email -->
                     <a href="javascript:void(0)" class="text-sm text-indigo-600 hover:text-indigo-500" onclick="showEmailField()">Zapomniałeś hasła?</a>
                 </div>
 
@@ -119,38 +84,40 @@
                 <div id="forgot-password-email" class="hidden">
                     <label for="forgotEmail" class="block text-sm font-medium text-gray-700">Podaj adres email</label>
                     <input id="forgotEmail" name="email" type="email"
-                           class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                           class="mt-1 block w-full p-2 border border-gray-300 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     <button type="button" onclick="submitForgotPassword()"
-                            class="mt-2 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            class="mt-2 w-full flex justify-center py-2 px-4 border border-transparent rounded shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         Wyślij link do zmiany hasła
                     </button>
                 </div>
 
                 <div>
                     <button type="submit"
-                            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            class="w-full flex justify-center py-2 px-4 border border-transparent rounded shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         Zaloguj się
                     </button>
                 </div>
             </form>
 
-            <!-- Logowanie przez Google -->
             <div class="mt-6">
-                <div class="flex items-center justify-center">
-                    <span class="text-sm text-gray-500">lub</span>
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-white text-gray-500">lub</span>
+                    </div>
                 </div>
+
                 <a href="#" th:href="@{/oauth2/authorization/google}"
-                   class="w-full inline-flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 mt-4">
+                   class="mt-6 w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                     <img class="h-5 w-5 mr-2" src="https://ssl.gstatic.com/images/branding/product/1x/gsa_64dp.png"
-                         alt="Google Logo">
-                    Logowanie przez Google
+                         alt="Google Logo"> Zaloguj się przez Google
                 </a>
             </div>
 
-            <!-- Rejestracja -->
             <p class="mt-6 text-center text-sm text-gray-500">
-                Nie jesteś użytkownikiem?
-                <a href="/register-user" class="text-indigo-600 hover:text-indigo-500">Zarejestruj się</a>
+                Nie masz konta? <a href="/register-user" class="font-medium text-indigo-600 hover:text-indigo-500">Zarejestruj się</a>
             </p>
         </div>
     </div>

@@ -15,9 +15,7 @@ import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -25,6 +23,8 @@ import java.util.stream.Collectors;
 public class ReferenceDocsLoader {
 
     private static final String RESOURCE_AND_EXTENSION_CLASSPATH = "classpath:/docs/*.*";
+    private int progress = 0;
+    private final int maxResourcesForProgress;
 
     private final JdbcClient jdbcClient;
     private final VectorStore vectorStore;
@@ -41,6 +41,7 @@ public class ReferenceDocsLoader {
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         org.springframework.core.io.Resource[] resourcesTable = resolver.getResources(RESOURCE_AND_EXTENSION_CLASSPATH);
         this.resources = Arrays.asList(resourcesTable);
+        this.maxResourcesForProgress = resources.size() + 1;
     }
 
     public static String readResourceAsString(Resource resource) {
@@ -59,14 +60,21 @@ public class ReferenceDocsLoader {
                 .single();
     }
 
+    public void resetVectorStore() {
+        jdbcClient.sql("DELETE FROM vector_store")
+                .update();
+    }
+
     @PostConstruct
     public void init() {
         int count = getCountVectorStore();
         log.info("Loaded {} chunks from DB", count);
         if (count == 0) {
             log.info("Loading documents from resources...");
+            this.progress = 0;
             var textSplitter = new TokenTextSplitter();
             resources.forEach(resource -> {
+                this.progress += 1;
                 try {
                     for (ReaderDocumentInterface readerDocument : readersDocument) {
                         if (Objects.requireNonNull(resource.getFilename()).endsWith(readerDocument.getDocumentType())) {
@@ -83,5 +91,14 @@ public class ReferenceDocsLoader {
         } else {
             log.info("Chanks already splited up, skipping load resources.");
         }
+        this.progress = maxResourcesForProgress;
+    }
+
+    public Map<String, Integer> getPercentProgress() {
+        Map<String, Integer> response = new HashMap<>();
+        double percent = ((double) this.progress / maxResourcesForProgress) * 100;
+        System.out.println("Pobieranie postępu..." + percent);
+        response.put("percentage", (int) percent);
+        return response;
     }
 }

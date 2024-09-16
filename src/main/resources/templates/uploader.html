@@ -66,6 +66,14 @@
         </tr>
         </tbody>
     </table>
+    <button type="button" onclick="startLoading()"
+            class="mt-4 submit-button bg-gray-300 hover:bg-gray-400 text-gray-600 text-white font-bold rounded p-2 ml-2">
+        <div class="loader text-center" id="loader"></div>
+        <span id="loadingText">Odśwież dane AI</span>
+    </button>
+    <div class="w-full bg-gray-200 rounded-full h-4 dark:bg-gray-300 mt-4">
+        <div class="bg-green-400 h-4 rounded-full" style="width: 50%;" id="progress-bar"></div>
+    </div>
 </div>
 <script>
 
@@ -175,9 +183,6 @@ function updateFileList() {
         });
 }
 
-// Pobierz listę plików przy ładowaniu strony
-updateFileList();
-
 // Obsługa usuwania plików
 document.getElementById('file-list').addEventListener('click', function(event) {
     if (event.target.closest('.delete-button')) {
@@ -202,6 +207,68 @@ document.getElementById('file-list').addEventListener('click', function(event) {
             });
     }
 });
+
+function updateProgressBar(percentage) {
+    document.getElementById('progress-bar').style.width = percentage + '%';
+}
+
+function fetchProgress() {
+    fetch('/progress', {
+        method: 'GET'
+    })  // Ścieżka do kontrolera zwracającego aktualną wartość postępu
+        .then(response => response.json())
+        .then(data => {
+            updateProgressBar(data.percentage); // Aktualizuj pasek na podstawie odpowiedzi z serwera
+            if (data.percentage >= 100) {
+                clearInterval(intervalId); // Zatrzymaj odświeżanie, gdy pasek osiągnie 100%
+                hideLoader(); // Ukryj loader, gdy ładowanie jest zakończone
+            }
+        })
+    .catch(error => console.error('Błąd pobierania postępu:', error));
+}
+
+// Funkcja do rozpoczęcia procesu ładowania i wyświetlenia loadera
+function startLoading() {
+    fetch('/start-progress', {
+        method: 'GET'
+    }) // Ścieżka do kontrolera rozpoczynającego proces ładowania
+        .then(response => response.json())
+        .catch(error => console.error('Błąd pobierania postępu:', error));
+    showLoader(); // Pokaż loader
+    intervalId = setInterval(fetchProgress, 10000); // Wywołuj fetchProgress co 10 sekund
+}
+
+// Funkcje do pokazywania i ukrywania loadera
+function showLoader() {
+    document.getElementById('loader').style.display = 'block';
+    document.getElementById('loadingText').style.display = 'none';
+}
+
+function hideLoader() {
+    document.getElementById('loader').style.display = 'none';
+    document.getElementById('loadingText').style.display = 'block';
+}
+
+function checkLoading() {
+    fetch('/progress', {
+        method: 'GET'
+    })  // Ścieżka do kontrolera zwracającego aktualną wartość postępu
+        .then(response => response.json())
+        .then(data => {
+            updateProgressBar(data.percentage); // Aktualizuj pasek na podstawie odpowiedzi z serwera
+            if (data.percentage < 100) {
+                showLoader(); // Pokaż loader
+                updateProgressBar(data.percentage); // Aktualizuj pasek na podstawie odpowiedzi z serwera
+                intervalId = setInterval(fetchProgress, 10000); // Wywołuj fetchProgress co 10 sekund
+            }
+        })
+    .catch(error => console.error('Błąd pobierania postępu:', error));
+}
+
+// Pobierz listę plików przy ładowaniu strony
+updateFileList();
+// Sprawdź, czy proces ładowania jest w toku
+checkLoading();
 
 </script>
 </body>

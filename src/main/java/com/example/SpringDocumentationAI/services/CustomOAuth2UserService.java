@@ -45,7 +45,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService implements
         } else {
             // Create a new user and save to the database
             newUser = new DtoUser();
-            User user = new User(oauth2User.getAttribute("name"), email, Objects.requireNonNull(oauth2User.getAttribute("picture")));
             newUser.setUsername(email);
             newUser.setPassword("password");
             newUser.setRole("USER");

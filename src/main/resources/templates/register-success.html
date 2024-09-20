@@ -11,13 +11,13 @@
 <body>
 <div class="container">
     <div class="message">
-        <h1>Rejestracja zakończona sukcesem!</h1>
-        <p>Na adres <span class="email" th:text="${email}"></span> został wysłany e-mail z linkiem aktywacyjnym.</p>
-        <p>Kliknij w link w e-mailu, aby aktywować swoje konto.</p>
+        <h1>Rejestracja przekazana do weryfikacji!</h1>
+        <p>Do administratora zostało wysłane żądanie weryfikacji, ponieważ dostęp do systemu może być płatny.</p>
+        <p>Po weryfikacji zostanie wysłany link na adres <span class="email" th:text="${email}"></span> w celu zakończenia rejestracji.</p>
     </div>
     <div class="button">
         <form th:action="@{/login}" th:method="get">
-            <input type="hidden" name="registersuccess">
+            <input type="hidden" name="registerverification">
             <button type="submit">OK</button>
         </form>
     </div>

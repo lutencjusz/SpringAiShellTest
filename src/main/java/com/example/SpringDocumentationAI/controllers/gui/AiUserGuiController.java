@@ -37,6 +37,12 @@ public class AiUserGuiController {
     @Value("${MAIL_SECRET}")
     private String mailSecret;
 
+    @Value("${HEROKU_APP_NAME}")
+    private String appName;
+
+    @Value("${MAIL_ADMIN}")
+    private String mailAdmin;
+
     @GetMapping("/register-user")
     public String registerUser(Model model) {
         // Pobranie aktualnie zalogowanego użytkownika
@@ -83,16 +89,15 @@ public class AiUserGuiController {
         if (model.containsAttribute("error")) {
             return "register-user";
         }
-        String appName = System.getenv("HEROKU_APP_NAME");
         if (appName == null) {
             appName = "localhost:8080";
         }
-        String link = "http://" + appName + "/confirm-registration?id=" + AiUserService.encrypt(user.getUsername(), mailSecret);
-        if (mailService.sendEmail(user.getEmail(),
-                "Potwierdzenie rejestracji Document AI Analizer",
-                "/templates/welcome-email.html",
-                link)) {
-            log.info("Wysłano email z potwierdzeniem rejestracji");
+        String linkUserVerification = "http://" + appName + "/user-verification?id=" + AiUserService.encrypt(user.getUsername(), mailSecret);
+        if (mailService.sendEmail(mailAdmin,
+                "Weryfikacja rejestracji w Document AI Analizer",
+                "/templates/user-verification-email.html",
+                linkUserVerification, user)) {
+            log.info("Wysłano email do weryfikacji rejestracji");
             aiUserService.saveUserAndEncodePass(user);
             model.addAttribute("email", user.getEmail());
             return "register-success"; // Przekierowanie po sukcesie

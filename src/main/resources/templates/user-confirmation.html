@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Rejestracja zakończona sukcesem</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/tailwind-built.css" rel="stylesheet">
+    <link href="/css/common-color.css" rel="stylesheet">
+    <link href="/css/user-confirmation.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div class="message">
+        <h1>Potwierdzenie weryfikacji założenia konta</h1>
+        <div th:if="${param.error}" class="rounded bg-red-50 p-4 flex items-center">
+            <svg class="h-6 w-6 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
+                      clip-rule="evenodd"/>
+            </svg>
+            <p class="ml-3 text-sm font-medium text-red-800">Błąd podczas wysyłania mejla potwierdzającego do użytkownika</p>
+        </div>
+        <p>Został wysłany link na adres <span class="email" th:text="${email}"></span> w celu potwierdzenia rejestracji przez użytkownika.</p>
+        <p>Po potwierdzeniu przez użytkownika konto będzie gotowe do użycia</p>
+    </div>
+    <div class="button">
+        <form th:action="@{/login}" th:method="get">
+            <input type="hidden" name="sendtoconfirmation">
+            <button type="submit">OK</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

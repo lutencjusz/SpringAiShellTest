@@ -1,5 +1,6 @@
 package com.example.SpringDocumentationAI.services;
 
+import com.example.SpringDocumentationAI.model.DtoUser;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,22 +17,29 @@ import java.nio.charset.StandardCharsets;
 public class MailService {
 
     private final JavaMailSender javaMailSender;
+    private final String from;
 
-    private final MimeMessageHelper helper;
+    private MimeMessageHelper helper;
 
     @Autowired
     public MailService(@Value("${mail.service.from}") String from, JavaMailSender javaMailSender) throws MessagingException {
         this.javaMailSender = javaMailSender;
-        MimeMessage message = javaMailSender.createMimeMessage();
-        helper = new MimeMessageHelper(message, true);
-        helper.setFrom(from);
+        this.from = from;
     }
 
-    public boolean sendEmail(String to, String subject, String mailTemplate, String dynamicLink) throws MessagingException {
+    public boolean sendEmail(String to, String subject, String mailTemplate, String dynamicLink, DtoUser user) throws MessagingException {
         try (var inputStream = JavaMailSender.class.getResourceAsStream(mailTemplate)) {
             assert inputStream != null;
             String htmlTemplate = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
             String emailContent = htmlTemplate.replace("${dynamicLink}", dynamicLink);
+            if (user != null) {
+                emailContent = emailContent.replace("${userName}", user.getUsername());
+                emailContent = emailContent.replace("${userEmail}", user.getEmail());
+
+            }
+            MimeMessage message = javaMailSender.createMimeMessage();
+            helper = new MimeMessageHelper(message, true);
+            helper.setFrom(from);
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(emailContent, true);

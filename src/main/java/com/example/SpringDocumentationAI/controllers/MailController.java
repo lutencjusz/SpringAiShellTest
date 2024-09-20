@@ -3,7 +3,6 @@ package com.example.SpringDocumentationAI.controllers;
 import com.example.SpringDocumentationAI.model.DtoUser;
 import com.example.SpringDocumentationAI.services.AiUserService;
 import com.example.SpringDocumentationAI.services.MailService;
-import groovy.lang.Singleton;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;

@@ -62,6 +62,7 @@ public class SecurityFilerConfig {
                         .requestMatchers("/question", "/upload").authenticated()
                         .requestMatchers("/", "/api/chat/**", "/chat/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/download", "/download-faster", "/files-list", "/delete-file/**", "/load-data", "/progress", "/start-progress").hasAnyRole("ADMIN")
+                        .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null).denyAll()
                         .anyRequest().authenticated())
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers("/files-list", "/load-data", "/delete-file/**", "/change-password/**", "/reset-password/**", "/register-user", "/upload", "/api/chat/**", "/chat/**", "/register", "/authenticate", "/question", "/confirm-registration"))
@@ -79,8 +80,6 @@ public class SecurityFilerConfig {
                 .addFilterBefore(jwtAuthenticationFilterConfig, UsernamePasswordAuthenticationFilter.class)
                 .requiresChannel(
                         requiresChannel -> requiresChannel
-                                .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") == null)
-                                .requiresInsecure()
                                 .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
                                 .requiresSecure()
                 );

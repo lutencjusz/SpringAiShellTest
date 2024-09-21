@@ -58,7 +58,7 @@ public class SecurityFilerConfig {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/swagger-ui/**", "/api-docs/**").hasRole("ADMIN")
                         .requestMatchers("/login/**", "/authenticate", "/css/**", "/js/**", "/images/**").permitAll()
-                        .requestMatchers("/register/**", "/register-user", "/register-success", "/confirm-registration", "/reset-password/**", "/change-password/**","/user-verification").permitAll()
+                        .requestMatchers("/register/**", "/register-user", "/register-success", "/confirm-registration", "/reset-password/**", "/change-password/**", "/user-verification").permitAll()
                         .requestMatchers("/question", "/upload").authenticated()
                         .requestMatchers("/", "/api/chat/**", "/chat/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/download", "/download-faster", "/files-list", "/delete-file/**", "/load-data", "/progress", "/start-progress").hasAnyRole("ADMIN")
@@ -75,7 +75,13 @@ public class SecurityFilerConfig {
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService)) // Custom OAuth2UserService
                         .successHandler((request, response, authentication) -> response.sendRedirect("/")))
-                .addFilterBefore(jwtAuthenticationFilterConfig, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilterConfig, UsernamePasswordAuthenticationFilter.class)
+                .requiresChannel(
+                        requiresChannel -> requiresChannel
+                                .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") == null)
+                                .requiresInsecure()
+                                .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
+                                .requiresSecure());
         return http.build();
     }
 

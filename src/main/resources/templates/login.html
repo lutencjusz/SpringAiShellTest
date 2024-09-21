@@ -101,7 +101,8 @@
                 </div>
 
                 <div class="flex items-center justify-between">
-                    <a href="javascript:void(0)" class="text-sm text-indigo-600 hover:text-indigo-500" onclick="showEmailField()">Zapomniałeś hasła?</a>
+                    <a href="javascript:void(0)" class="text-sm text-indigo-600 hover:text-indigo-500"
+                       onclick="showEmailField()">Zapomniałeś hasła?</a>
                 </div>
 
                 <!-- Ukryte pole e-mail, które się pojawi po kliknięciu "Zapomniałeś hasła?" -->
@@ -132,16 +133,22 @@
                         <span class="px-2 bg-white text-gray-500">lub</span>
                     </div>
                 </div>
-
-                <a href="/oauth2/authorization/google"
-                   class="mt-6 w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                    <img class="h-5 w-5 mr-2" src="https://ssl.gstatic.com/images/branding/product/1x/gsa_64dp.png"
-                         alt="Google Logo"> Zaloguj się przez Google
-                </a>
+                <div class="text-center flex space-x-4">
+                    <a href="/oauth2/authorization/google"
+                       class="mt-6 w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded shadow-sm bg-white text-xs font-medium text-gray-500 hover:bg-gray-50">
+                        <img class="h-5 w-5 mr-2" src="https://ssl.gstatic.com/images/branding/product/1x/gsa_64dp.png"
+                             alt="Google Logo"> Google
+                    </a>
+                    <a href="/oauth2/authorization/github"
+                       class="mt-6 w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded shadow-sm bg-white text-xs font-medium text-gray-500 hover:bg-gray-50">
+                        <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub Logo" class="h-5 w-5 mr-2"> GitHub
+                    </a>
+                </div>
             </div>
 
             <p class="mt-6 text-center text-sm text-gray-500">
-                Nie masz konta? <a href="/register-user" class="font-medium text-indigo-600 hover:text-indigo-500">Zarejestruj się</a>
+                Nie masz konta? <a href="/register-user" class="font-medium text-indigo-600 hover:text-indigo-500">Zarejestruj
+                się</a>
             </p>
         </div>
     </div>

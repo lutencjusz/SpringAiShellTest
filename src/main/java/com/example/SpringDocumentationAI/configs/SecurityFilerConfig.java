@@ -44,6 +44,15 @@ public class SecurityFilerConfig {
     private PasswordEncoder passwordEncoder;
 
     @Bean
+    public WebServerFactoryCustomizer<TomcatServletWebServerFactory> tomcatCustomizer() {
+        return (factory) -> factory.addConnectorCustomizers((connector) -> {
+            connector.setScheme("https");
+            connector.setSecure(true);
+            connector.setPort(443);
+        });
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .headers(headers -> headers
@@ -105,13 +114,4 @@ public class SecurityFilerConfig {
     public AuthenticationManager authenticationManager() {
         return new ProviderManager(authenticationProvider());
     }
-
-//    @Bean
-//    public WebServerFactoryCustomizer<TomcatServletWebServerFactory> tomcatCustomizer() {
-//        return (factory) -> factory.addConnectorCustomizers((connector) -> {
-//            connector.setScheme("https");
-//            connector.setSecure(true);
-//            connector.setPort(443);
-//        });
-//    }
 }

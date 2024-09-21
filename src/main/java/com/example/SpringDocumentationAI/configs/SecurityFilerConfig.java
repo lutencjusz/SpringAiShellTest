@@ -5,6 +5,8 @@ import com.example.SpringDocumentationAI.services.AiUserService;
 import com.example.SpringDocumentationAI.services.CustomOAuth2UserService;
 import com.example.SpringDocumentationAI.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -102,5 +104,14 @@ public class SecurityFilerConfig {
     @Bean
     public AuthenticationManager authenticationManager() {
         return new ProviderManager(authenticationProvider());
+    }
+
+    @Bean
+    public WebServerFactoryCustomizer<TomcatServletWebServerFactory> tomcatCustomizer() {
+        return (factory) -> factory.addConnectorCustomizers((connector) -> {
+            connector.setScheme("https");
+            connector.setSecure(true);
+            connector.setPort(443);
+        });
     }
 }

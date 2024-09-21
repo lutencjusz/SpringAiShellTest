@@ -72,9 +72,11 @@ public class SecurityFilerConfig {
                         .permitAll())
                 .oauth2Login(oauth2login -> oauth2login
                         .loginPage("/login")
+                        .defaultSuccessUrl("/", true)
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService)) // Custom OAuth2UserService
-                        .successHandler((request, response, authentication) -> response.sendRedirect("/")))
+                        .successHandler((request, response, authentication) -> response.sendRedirect("/"))
+                        .failureUrl("/login?error"))
                 .addFilterBefore(jwtAuthenticationFilterConfig, UsernamePasswordAuthenticationFilter.class)
                 .requiresChannel(
                         requiresChannel -> requiresChannel

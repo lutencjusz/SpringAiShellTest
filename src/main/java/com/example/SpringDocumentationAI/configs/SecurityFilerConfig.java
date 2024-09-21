@@ -5,8 +5,6 @@ import com.example.SpringDocumentationAI.services.AiUserService;
 import com.example.SpringDocumentationAI.services.CustomOAuth2UserService;
 import com.example.SpringDocumentationAI.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
-import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.ForwardedHeaderFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -44,12 +43,8 @@ public class SecurityFilerConfig {
     private PasswordEncoder passwordEncoder;
 
     @Bean
-    public WebServerFactoryCustomizer<TomcatServletWebServerFactory> tomcatCustomizer() {
-        return (factory) -> factory.addConnectorCustomizers((connector) -> {
-            connector.setScheme("https");
-            connector.setSecure(true);
-            connector.setPort(443);
-        });
+    public ForwardedHeaderFilter forwardedHeaderFilter() {
+        return new ForwardedHeaderFilter();
     }
 
     @Bean

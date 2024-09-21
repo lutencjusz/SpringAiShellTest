@@ -81,7 +81,8 @@ public class SecurityFilerConfig {
                                 .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") == null)
                                 .requiresInsecure()
                                 .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
-                                .requiresSecure());
+                                .requiresSecure()
+                );
         return http.build();
     }
 

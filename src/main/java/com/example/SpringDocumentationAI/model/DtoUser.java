@@ -28,7 +28,7 @@ public class DtoUser implements UserDetails {
     private String password;
     @Getter
     private String role;
-    private boolean enabled = false;
+    private boolean enabled;
     private boolean accountNonLocked = true;
     @Getter
     @NotEmpty(message = "Email nie może być pusty")

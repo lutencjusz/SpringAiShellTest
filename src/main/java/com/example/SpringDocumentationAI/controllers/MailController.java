@@ -35,7 +35,7 @@ public class MailController {
      * Wysyłanie maila z linkiem do potwierdzenia rejestracji przez użytkownika końcowego
      *
      * @param encrypyedUsername - zaszyfrowana nazwa użytkownika
-     * @param model - model danych
+     * @param model             - model danych
      * @return - widok formularza potwierdzenia rejestracji przez użytkownika końcowego
      * @throws Exception - wyjątek w przypadku błędu
      */
@@ -49,7 +49,7 @@ public class MailController {
         if (mailService.sendEmail(user.get().getEmail(),
                 "Potwierdzenie rejestracji w Document AI Analizer",
                 "/templates/welcome-email.html",
-                linkUserConfirmation,null)) {
+                linkUserConfirmation, null)) {
             model.addAttribute("email", user.get().getEmail());
             return "user-confirmation";
         } else {

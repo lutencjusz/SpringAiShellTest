@@ -109,6 +109,7 @@ To run the project locally:
 - **Thymeleaf with HXMX** - HTML forms with HTMX template engine.
 - **OpenAI** - ChatGPT API.
 - **Tailwind CSS** - CSS framework.
+- **JWT** - JSON Web Tokens for user authentication.
 
 ## Contributing
 

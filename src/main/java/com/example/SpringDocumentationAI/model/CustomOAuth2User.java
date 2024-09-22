@@ -36,4 +36,12 @@ public class CustomOAuth2User implements OAuth2User {
                 .map(role -> new SimpleGrantedAuthority(role.getAuthority()))
                 .collect(Collectors.toList());
     }
+
+    public String getEmail() {
+        return dtoUser.getEmail(); // lub inny klucz dla adresu email
+    }
+
+    public boolean isEnabled() {
+        return dtoUser.isEnabled();
+    }
 }

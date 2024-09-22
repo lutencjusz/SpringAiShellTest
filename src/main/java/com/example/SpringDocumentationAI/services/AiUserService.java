@@ -49,11 +49,19 @@ public class AiUserService implements UserDetailsService {
     }
 
     public Optional<DtoUser> findByUsername(String username) {
-        return aiUserRepository.findByUsername(username);
+        try {
+            return aiUserRepository.findByUsername(username);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
     public Optional<DtoUser> findByEmail(String email) {
-        return aiUserRepository.findByEmail(email);
+        try {
+            return aiUserRepository.findByEmail(email);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
     // Metoda do dodawania nowego użytkownika

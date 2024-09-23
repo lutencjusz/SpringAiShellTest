@@ -9,17 +9,17 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.InMemoryChatMemory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Locale;
 
 @Slf4j
 @Controller
@@ -28,6 +28,9 @@ public class SpringAssistantGuiController {
 
     @Autowired
     private SpringAssistantService springAssistantService;
+
+    @Autowired
+    private MessageSource messageSource;
 
     private final ChatClient chatClient;
 
@@ -76,7 +79,18 @@ public class SpringAssistantGuiController {
     }
 
     @GetMapping("/login")
-    public String customLogin() {
+    public String customLogin(Model model) {
+//        Locale.setDefault(Locale.ENGLISH);
+        model.addAttribute("message_title", messageSource.getMessage("login.title", null, Locale.getDefault()));
+        model.addAttribute("message_username", messageSource.getMessage("login.username", null, Locale.getDefault()));
+        model.addAttribute("message_password", messageSource.getMessage("login.password", null, Locale.getDefault()));
+        model.addAttribute("message_password_forgot", messageSource.getMessage("login.password.forgot", null, Locale.getDefault()));
+        model.addAttribute("message_submit", messageSource.getMessage("login.submit", null, Locale.getDefault()));
+        model.addAttribute("message_not_registered", messageSource.getMessage("login.not.registered", null, Locale.getDefault()));
+        model.addAttribute("message_register", messageSource.getMessage("login.register", null, Locale.getDefault()));
+        model.addAttribute("message_or", messageSource.getMessage("login.or", null, Locale.getDefault()));
+        model.addAttribute("message_email", messageSource.getMessage("login.email", null, Locale.getDefault()));
+        model.addAttribute("message_send_email", messageSource.getMessage("login.send.email", null, Locale.getDefault()));
         return "login";
     }
 

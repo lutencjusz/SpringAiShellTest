@@ -14,7 +14,7 @@
     <div class="bg-white shadow-lg rounded-md sm:max-w-md sm:w-full p-8">
         <div class="text-center">
             <img class="mx-auto h-12 w-auto" src="/images/favicon.png" alt="Sopim">
-            <h2 class="mt-6 text-3xl font-extrabold text-gray-900">Logowanie do konta</h2>
+            <h2 class="mt-6 text-3xl font-extrabold text-gray-900" th:text="${message_title}"></h2>
         </div>
 
         <div class="mt-8 space-y-6">
@@ -78,13 +78,15 @@
 
             <form class="space-y-6" th:action="@{/login}" method="POST">
                 <div>
-                    <label for="username" class="block text-sm font-medium text-gray-700">Nazwa użytkownika</label>
+                    <label for="username" class="block text-sm font-medium text-gray-700"
+                           th:text="${message_username}"></label>
                     <input id="username" name="username" type="text" required
                            class="mt-1 block w-full p-2 border border-gray-300 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 </div>
 
                 <div class="relative">
-                    <label for="password" class="block text-sm font-medium text-gray-700">Hasło</label>
+                    <label for="password" class="block text-sm font-medium text-gray-700"
+                           th:text="${message_password}"></label>
                     <input id="password" name="password" type="password" required
                            class="mt-1 block w-full p-2 border border-gray-300 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     <button type="button" onclick="togglePassword()"
@@ -102,24 +104,25 @@
 
                 <div class="flex items-center justify-between">
                     <a href="javascript:void(0)" class="text-sm text-indigo-600 hover:text-indigo-500"
-                       onclick="showEmailField()">Zapomniałeś hasła?</a>
+                       onclick="showEmailField()" th:text="${message_password_forgot}"></a>
                 </div>
 
                 <!-- Ukryte pole e-mail, które się pojawi po kliknięciu "Zapomniałeś hasła?" -->
                 <div id="forgot-password-email" class="hidden">
-                    <label for="forgotEmail" class="block text-sm font-medium text-gray-700">Podaj adres email</label>
+                    <label for="forgotEmail" class="block text-sm font-medium text-gray-700"
+                           th:text="${message_email}"></label>
                     <input id="forgotEmail" name="email" type="email"
                            class="mt-1 block w-full p-2 border border-gray-300 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     <button type="button" onclick="submitForgotPassword()"
-                            class="mt-2 w-full flex justify-center py-2 px-4 border border-transparent rounded shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        Wyślij link do zmiany hasła
+                            class="mt-2 w-full flex justify-center py-2 px-4 border border-transparent rounded shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            th:text="${message_send_email}">
                     </button>
                 </div>
 
                 <div>
                     <button type="submit"
-                            class="w-full flex justify-center py-2 px-4 border border-transparent rounded shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        Zaloguj się
+                            class="w-full flex justify-center py-2 px-4 border border-transparent rounded shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            th:text="${message_submit}">
                     </button>
                 </div>
             </form>
@@ -130,7 +133,7 @@
                         <div class="w-full border-t border-gray-300"></div>
                     </div>
                     <div class="relative flex justify-center text-sm">
-                        <span class="px-2 bg-white text-gray-500">lub</span>
+                        <span class="px-2 bg-white text-gray-500" th:text="${message_or}"></span>
                     </div>
                 </div>
                 <div class="text-center flex space-x-4">
@@ -141,15 +144,19 @@
                     </a>
                     <a href="/oauth2/authorization/github"
                        class="mt-6 w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded shadow-sm bg-white text-xs font-medium text-gray-500 hover:bg-gray-50">
-                        <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub Logo" class="h-5 w-5 mr-2"> GitHub
+                        <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+                             alt="GitHub Logo" class="h-5 w-5 mr-2"> GitHub
                     </a>
                 </div>
             </div>
 
             <p class="mt-6 text-center text-sm text-gray-500">
-                Nie masz konta? <a href="/register-user" class="font-medium text-indigo-600 hover:text-indigo-500">Zarejestruj
-                się</a>
+                <span th:text="${message_not_registered}"></span>
+                <a href="/register-user" class="font-medium text-indigo-600 hover:text-indigo-500">
+                    <span th:text="${message_register}"></span>
+                </a>
             </p>
+
         </div>
     </div>
 </div>

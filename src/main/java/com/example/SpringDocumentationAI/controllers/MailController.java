@@ -43,7 +43,7 @@ public class MailController {
     public String showUserVerificationForm(@RequestParam("id") String encrypyedUsername, Model model) throws Exception {
         Optional<DtoUser> user = aiUserService.findByUsername(AiUserService.decrypt(encrypyedUsername, mailSecret));
         if (user.isEmpty()) {
-            return "redirect:/login:unconfirmed";
+            return "redirect:/login?unconfirmed";
         }
         String linkUserConfirmation = "http://" + appName + "/confirm-registration?id=" + AiUserService.encrypt(user.get().getEmail(), mailSecret);
         if (mailService.sendEmail(user.get().getEmail(),
@@ -53,7 +53,7 @@ public class MailController {
             model.addAttribute("email", user.get().getEmail());
             return "user-confirmation";
         } else {
-            return "user-confirmation:error";
+            return "user-confirmation?error";
         }
     }
 

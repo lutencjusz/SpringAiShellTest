@@ -80,7 +80,7 @@ public class SpringAssistantGuiController {
 
     @GetMapping("/login")
     public String customLogin(Model model) {
-//        Locale.setDefault(Locale.ENGLISH);
+        Locale.setDefault(new Locale("pl"));
         model.addAttribute("message_title", messageSource.getMessage("login.title", null, Locale.getDefault()));
         model.addAttribute("message_username", messageSource.getMessage("login.username", null, Locale.getDefault()));
         model.addAttribute("message_password", messageSource.getMessage("login.password", null, Locale.getDefault()));

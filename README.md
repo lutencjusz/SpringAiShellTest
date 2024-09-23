@@ -110,6 +110,7 @@ To run the project locally:
 - **OpenAI** - ChatGPT API.
 - **Tailwind CSS** - CSS framework.
 - **JWT** - JSON Web Tokens for user authentication.
+- **Swagger UI** - API documentation avaible at `/swagger-ui/index.html` by ADMIN role.
 
 ## Contributing
 

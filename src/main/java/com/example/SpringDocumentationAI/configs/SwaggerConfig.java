@@ -5,6 +5,7 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -34,5 +35,13 @@ public class SwaggerConfig {
                 .summary("API do zadawania pytań i uzyskiwania odpowiedzi za pomocą Chat GPT")
                 .contact(myContact);
         return new OpenAPI().info(information).servers(List.of(server));
+    }
+
+    @Bean
+    public GroupedOpenApi visibleApi() {
+        return GroupedOpenApi.builder()
+                .group("visible-api")
+                .pathsToMatch("/question/**")  // wyświetlanie tylko wybranych ścieżek
+                .build();
     }
 }

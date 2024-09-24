@@ -6,6 +6,7 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
 import org.springdoc.core.models.GroupedOpenApi;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,11 +17,14 @@ import java.util.List;
 @Configuration
 public class SwaggerConfig {
 
+    @Value("${HEROKU_APP_NAME}")
+    private String appName;
+
     @Bean
     public OpenAPI defineOpenApi() throws UnknownHostException {
         InetAddress inetAddress = InetAddress.getLocalHost();
         Server server = new Server();
-        server.setUrl("http://" + inetAddress + ":8080");
+        server.setUrl("http://" + appName);
         server.setDescription("Asystent Chat GPT");
         server.setDescription("Asystent umożliwiający zadawanie pytań i uzyskiwanie odpowiedzi za pomocą GPT-3 na podstawie zasobów dokumentacji w formie plików PDF lub epub");
         Contact myContact = new Contact();

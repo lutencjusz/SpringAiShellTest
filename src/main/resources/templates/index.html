@@ -84,7 +84,7 @@
         <div class="modal-content">
             <div class="modal-header">Menu</div>
             <ul class="space-y-4">
-                <li>
+                <li th:if="${user == 'ROLE_ADMIN'}">
                     <a href="/load-data" class="block text-gray-700 hover:bg-gray-300 rounded p-2">
                         Ładowanie danych
                     </a>
@@ -92,6 +92,11 @@
                 <li>
                     <a href="/register-user" class="block text-gray-700 hover:bg-gray-300 rounded p-2">
                         Zarządzanie użytkownikiem
+                    </a>
+                </li>
+                <li th:if="${user == 'ROLE_ADMIN'}">
+                    <a href="/swagger-ui/index.html" class="block text-gray-700 hover:bg-gray-300 rounded p-2">
+                        Dokumentacja API
                     </a>
                 </li>
                 <li>

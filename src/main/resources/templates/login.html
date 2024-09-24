@@ -8,9 +8,13 @@
     <title>Login page</title>
     <link href="/css/tailwind-built.css" rel="stylesheet">
     <link href="/css/common-color.css" rel="stylesheet">
+    <link href="/css/login.css" rel="stylesheet">
 </head>
 <body class="min-h-screen">
+<div class="loading-overlay"></div>
+<div class="spinner"></div>
 <div class="flex min-h-full flex-col justify-center items-center px-6">
+    <p id="country-code"></p>
     <div class="bg-white shadow-lg rounded-md sm:max-w-md sm:w-full p-8">
         <div class="text-center">
             <img class="mx-auto h-12 w-auto" src="/images/favicon.png" alt="Sopim">
@@ -163,45 +167,102 @@
 
 <!-- JavaScript -->
 <script>
-    function togglePassword() {
-        const passwordInput = document.getElementById('password');
-        const eyeIcon = document.getElementById('eye-icon');
+    // Pokazanie spinnera po załadowaniu dokumentu
+document.addEventListener("DOMContentLoaded", function() {
+    var spinner = document.querySelector(".spinner");
+    var overlay = document.querySelector(".loading-overlay");
+    spinner.style.display = "block";
+    overlay.style.display = "block";
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+    } else {
+        document.getElementById("country-code").innerHTML = "Geolokalizacja nie jest wspierana przez tę przeglądarkę.";
+    }
+});
 
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text'; // Pokazuje hasło
-            eyeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825a10.35 10.35 0 003.432-5.49C16.748 10.958 14.15 9 12 9c-2.15 0-4.748 1.958-5.307 4.335a10.35 10.35 0 003.432 5.49M9 12a3 3 0 006 0 3 3 0 00-6 0z" />';
-        } else {
-            passwordInput.type = 'password'; // Ukrywa hasło
-            eyeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-.733 2.211-2.43 4.085-4.733 5.099M15 12a9.364 9.364 0 00-3 2.4"/>';
+function successCallback(position) {
+    var spinner = document.querySelector(".spinner");
+    var overlay = document.querySelector(".loading-overlay");
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+
+            // Wywołanie API reverse geocoding, aby uzyskać kod kraju
+            const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=5&addressdetails=1`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const countryCode = data.address.country_code.toUpperCase();
+                    document.getElementById("country-code").innerHTML = `Kod kraju: ${countryCode}`;
+                })
+                .catch(error => {
+                    console.error("Błąd podczas pobierania danych geolokalizacyjnych:", error);
+                    document.getElementById("country-code").innerHTML = "Nie udało się pobrać kodu kraju.";
+                });
+            spinner.style.display = "none";
+            overlay.style.display = "none";
         }
-    }
 
-    function showEmailField() {
-        const emailField = document.getElementById('forgot-password-email');
-        emailField.classList.remove('hidden'); // Pokazuje ukryte pole email
-    }
-
-    function submitForgotPassword() {
-        const email = document.getElementById('forgotEmail').value;
-        if (email) {
-            fetch(`/reset-password?email=${email}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }).then(response => {
-                if (response.ok) {
-                    window.location.href = '/login?changepasswordsuccess';
-                } else {
-                    window.location.href = '/login?changepassworderror';
-                }
-            }).catch(error => {
-                window.location.href = '/login?changepassworderror';
-            });
-        } else {
-            alert('Proszę podać adres e-mail.');
+        function errorCallback(error) {
+            var spinner = document.querySelector(".spinner");
+    var overlay = document.querySelector(".loading-overlay");
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    document.getElementById("country-code").innerHTML = "Użytkownik odmówił zgody na geolokalizację.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    document.getElementById("country-code").innerHTML = "Informacja o lokalizacji jest niedostępna.";
+                    break;
+                case error.TIMEOUT:
+                    document.getElementById("country-code").innerHTML = "Żądanie o lokalizację przekroczyło limit czasu.";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    document.getElementById("country-code").innerHTML = "Wystąpił nieznany błąd.";
+                    break;
+            }
+            spinner.style.display = "none";
+            overlay.style.display = "none";
         }
-    }
+
+function togglePassword() {
+const passwordInput = document.getElementById('password');
+const eyeIcon = document.getElementById('eye-icon');
+
+if (passwordInput.type === 'password') {
+    passwordInput.type = 'text'; // Pokazuje hasło
+    eyeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825a10.35 10.35 0 003.432-5.49C16.748 10.958 14.15 9 12 9c-2.15 0-4.748 1.958-5.307 4.335a10.35 10.35 0 003.432 5.49M9 12a3 3 0 006 0 3 3 0 00-6 0z" />';
+} else {
+    passwordInput.type = 'password'; // Ukrywa hasło
+    eyeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-.733 2.211-2.43 4.085-4.733 5.099M15 12a9.364 9.364 0 00-3 2.4"/>';
+}
+}
+
+function showEmailField() {
+const emailField = document.getElementById('forgot-password-email');
+emailField.classList.remove('hidden'); // Pokazuje ukryte pole email
+}
+
+function submitForgotPassword() {
+const email = document.getElementById('forgotEmail').value;
+if (email) {
+    fetch(`/reset-password?email=${email}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(response => {
+        if (response.ok) {
+            window.location.href = '/login?changepasswordsuccess';
+        } else {
+            window.location.href = '/login?changepassworderror';
+        }
+    }).catch(error => {
+        window.location.href = '/login?changepassworderror';
+    });
+} else {
+    alert('Proszę podać adres e-mail.');
+}
+}
 </script>
 
 </body>

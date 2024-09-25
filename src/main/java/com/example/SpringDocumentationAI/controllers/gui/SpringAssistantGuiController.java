@@ -1,5 +1,6 @@
 package com.example.SpringDocumentationAI.controllers.gui;
 
+import com.example.SpringDocumentationAI.MessagePropertiesGenerator;
 import com.example.SpringDocumentationAI.services.SpringAssistantService;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponse;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HxRequest;
@@ -10,6 +11,7 @@ import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.InMemoryChatMemory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.io.IOException;
 import java.net.UnknownHostException;
 import java.time.Duration;
 import java.time.Instant;
@@ -31,6 +34,9 @@ public class SpringAssistantGuiController {
 
     @Autowired
     private MessageSource messageSource;
+
+    @Autowired
+    MessagePropertiesGenerator messagePropertiesGenerator;
 
     private final ChatClient chatClient;
 
@@ -81,8 +87,10 @@ public class SpringAssistantGuiController {
     }
 
     @GetMapping("/login")
-    public String customLogin(Model model) {
-        Locale.setDefault(new Locale("pl"));
+    public String customLogin(Model model) throws IOException {
+//        Locale.setDefault(Locale.ENGLISH);
+        String countryCode = String.valueOf(Locale.getDefault());
+        messagePropertiesGenerator.createPropertiesFile(countryCode);
         model.addAttribute("message_title", messageSource.getMessage("login.title", null, Locale.getDefault()));
         model.addAttribute("message_username", messageSource.getMessage("login.username", null, Locale.getDefault()));
         model.addAttribute("message_password", messageSource.getMessage("login.password", null, Locale.getDefault()));
@@ -94,6 +102,12 @@ public class SpringAssistantGuiController {
         model.addAttribute("message_email", messageSource.getMessage("login.email", null, Locale.getDefault()));
         model.addAttribute("message_send_email", messageSource.getMessage("login.send.email", null, Locale.getDefault()));
         return "login";
+    }
+
+    @GetMapping("/set-locate")
+    public ResponseEntity<String> setLocale(Locale locale) {
+        Locale.setDefault(locale);
+        return ResponseEntity.ok("");
     }
 
 }

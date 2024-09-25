@@ -82,7 +82,7 @@ public class SecurityFilerConfig {
                 )
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/swagger-ui/**", "/api-docs/**").hasRole("ADMIN")
-                        .requestMatchers("/login/**", "/authenticate", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/login/**", "/authenticate", "/css/**", "/js/**", "/images/**","/set-locate/**").permitAll()
                         .requestMatchers("/register/**", "/register-user", "/register-success", "/confirm-registration", "/reset-password/**", "/change-password/**", "/user-verification").permitAll()
                         .requestMatchers("/question", "/upload").authenticated()
                         .requestMatchers("/", "/api/chat/**", "/chat/**").hasAnyRole("USER", "ADMIN")

@@ -183,25 +183,38 @@ document.addEventListener("DOMContentLoaded", function() {
 function successCallback(position) {
     var spinner = document.querySelector(".spinner");
     var overlay = document.querySelector(".loading-overlay");
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+    let countryCode = 'PL'; // Domyślny kod kraju
 
-            // Wywołanie API reverse geocoding, aby uzyskać kod kraju
-            const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=5&addressdetails=1`;
+    // Wywołanie API reverse geocoding, aby uzyskać kod kraju
+    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=5&addressdetails=1`;
 
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    const countryCode = data.address.country_code.toUpperCase();
-                    document.getElementById("country-code").innerHTML = `Kod kraju: ${countryCode}`;
-                })
-                .catch(error => {
-                    console.error("Błąd podczas pobierania danych geolokalizacyjnych:", error);
-                    document.getElementById("country-code").innerHTML = "Nie udało się pobrać kodu kraju.";
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            var currentCountryCode = document.getElementById("country-code").innerHTML;
+            countryCode = data.address.country_code.toUpperCase();
+            if (currentCountryCode !== "Kod kraju: " + countryCode) {
+                document.getElementById("country-code").innerHTML = `Kod kraju: ${countryCode}`;
+                console.log("JavaScript: Kod kraju: " + countryCode);
+                fetch("/set-locate?lang=" + countryCode).catch(error => {
+                    console.error("Błąd podczas zapisywania lokalizacji:", error);
                 });
+            } else {
+                spinner.style.display = "none";
+                overlay.style.display = "none";
+            }
+        })
+        .catch(error => {
+            console.error("Błąd podczas pobierania danych geolokalizacyjnych:", error);
+            document.getElementById("country-code").innerHTML = "Nie udało się pobrać kodu kraju.";
             spinner.style.display = "none";
             overlay.style.display = "none";
-        }
+        });
+    spinner.style.display = "none";
+    overlay.style.display = "none";
+}
 
         function errorCallback(error) {
             var spinner = document.querySelector(".spinner");

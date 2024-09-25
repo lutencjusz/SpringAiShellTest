@@ -69,4 +69,10 @@ public class SpringAssistantService {
             return false;
         }
     }
+
+    public String translate(String text, String targetLanguage) {
+        return getChatGptAnswer("Przetłumacz tylko frazy w języku polskim '"
+                + text + "' na język określony kodem '"
+                + targetLanguage + "'. Zwróć tylko frazy bez żadnych ozdobników. Każda linia powinna kończyć się znakiem nowej linii.");
+    }
 }

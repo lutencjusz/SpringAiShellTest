@@ -90,6 +90,7 @@ public class SpringAssistantGuiController {
     public String customLogin(Model model) throws IOException {
 //        Locale.setDefault(Locale.ENGLISH);
         String countryCode = String.valueOf(Locale.getDefault());
+        log.info("Kod kraju: {}", countryCode);
         messagePropertiesGenerator.createPropertiesFile(countryCode);
         model.addAttribute("message_title", messageSource.getMessage("login.title", null, Locale.getDefault()));
         model.addAttribute("message_username", messageSource.getMessage("login.username", null, Locale.getDefault()));
@@ -106,6 +107,7 @@ public class SpringAssistantGuiController {
 
     @GetMapping("/set-locate")
     public ResponseEntity<String> setLocale(Locale locale) {
+        log.info("Ustawiono lokalizację na: {}", locale);
         Locale.setDefault(locale);
         return ResponseEntity.ok("");
     }

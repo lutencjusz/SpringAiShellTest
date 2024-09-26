@@ -14,10 +14,14 @@
 <div class="loading-overlay"></div>
 <div class="spinner"></div>
 <div class="flex min-h-full flex-col justify-center items-center px-6">
-    <p id="country-code"></p>
     <div class="bg-white shadow-lg rounded-md sm:max-w-md sm:w-full p-8">
         <div class="text-center">
-            <img class="mx-auto h-12 w-auto" src="/images/favicon.png" alt="Sopim">
+            <div class="header flex items-center">
+                <img class="mx-auto h-12 w-auto pl-6" src="/images/favicon.png" alt="Sopim">
+                <div class="bg-gray-300 text-gray-600 rounded p-2 ml-1">
+                    <p id="country-code">PL</p>
+                </div>
+            </div>
             <h2 class="mt-6 text-3xl font-extrabold text-gray-900" th:text="${message_title}"></h2>
         </div>
 
@@ -195,8 +199,8 @@ function successCallback(position) {
         .then(data => {
             var currentCountryCode = document.getElementById("country-code").innerHTML;
             countryCode = data.address.country_code.toUpperCase();
-            if (currentCountryCode !== "Kod kraju: " + countryCode) {
-                document.getElementById("country-code").innerHTML = `Kod kraju: ${countryCode}`;
+            if (currentCountryCode !== countryCode) {
+                document.getElementById("country-code").innerHTML = `${countryCode}`;
                 console.log("JavaScript: Kod kraju: " + countryCode);
                 fetch("/set-locate?lang=" + countryCode).catch(error => {
                     console.error("Błąd podczas zapisywania lokalizacji:", error);

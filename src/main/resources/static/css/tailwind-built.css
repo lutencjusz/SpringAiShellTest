@@ -2228,6 +2228,10 @@ video {
   padding-left: 0.5rem;
 }
 
+.pl-6 {
+  padding-left: 1.5rem;
+}
+
 .pr-3 {
   padding-right: 0.75rem;
 }

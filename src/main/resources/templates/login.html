@@ -189,8 +189,11 @@ function successCallback(position) {
     var overlay = document.querySelector(".loading-overlay");
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
-    let countryCode = 'EN'; // Domyślny kod kraju
+    let countryCode = 'PL'; // Domyślny kod kraju
     document.getElementById("country-code").innerHTML = `${countryCode}`;
+    fetch("/set-locate?lang=" + countryCode).catch(error => {
+        console.error("Błąd podczas zapisywania lokalizacji:", error);
+    });
 
     // Wywołanie API reverse geocoding, aby uzyskać kod kraju
     const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=5&addressdetails=1`;

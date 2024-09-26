@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -106,7 +107,7 @@ public class SpringAssistantGuiController {
     }
 
     @GetMapping("/set-locate")
-    public ResponseEntity<String> setLocale(Locale locale) {
+    public ResponseEntity<String> setLocale(@RequestParam(name = "lang") Locale locale) {
         log.info("Ustawiono lokalizację na: {}", locale);
         Locale.setDefault(locale);
         return ResponseEntity.ok("");

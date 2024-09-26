@@ -190,6 +190,7 @@ function successCallback(position) {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
     let countryCode = 'EN'; // Domyślny kod kraju
+    document.getElementById("country-code").innerHTML = `${countryCode}`;
 
     // Wywołanie API reverse geocoding, aby uzyskać kod kraju
     const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=5&addressdetails=1`;

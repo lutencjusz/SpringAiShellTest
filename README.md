@@ -69,7 +69,12 @@ Additional requirements for Heroku deployment:
    BASE_URI=https://your_heroku_app_name.herokuapp.com
    
    ```
-4. Install the dependencies:
+4. Initialize the database:
+
+   ```bash
+   (Windows): open Docker Desktop and run in springdocumentationai_2024 container pgvector-1
+   ```
+5. Install the dependencies:
 
    ```bash
    mvn clean install

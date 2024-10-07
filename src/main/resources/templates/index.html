@@ -11,12 +11,13 @@
     <script src="https://unpkg.com/htmx.org@1.9.12"
             integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2"
             crossorigin="anonymous"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> <!-- dodanie marked.js -->
     <link href="/css/tailwind-built.css" rel="stylesheet">
     <link href="/css/common-color.css" rel="stylesheet">
     <link href="/css/index.css" rel="stylesheet">
     <!-- Include a Markdown rendering library -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
     <style>
         .markdown-body {
             background-color: #f5f5f5; /* Set background color for markdown space */
@@ -118,6 +119,16 @@
     const closeMenuModal = document.getElementById('closeMenuModal');
     const clearButton = document.getElementById('clearButton');
     const messageInput = document.getElementById('message');
+
+    document.addEventListener("htmx:afterSwap", function (event) {
+    // Sprawdzanie, czy odpowiedź dotyczy elementu z id 'response-container-p'
+    if (event.detail.target.id === 'response-container') {
+        const responseContainer = document.getElementById('response-container-p');
+        const markdownContent = responseContainer.innerText;
+        const htmlContent = marked.parse(markdownContent);
+        responseContainer.innerHTML = htmlContent;
+    }
+});
 
     menuButton.addEventListener('click', function () {
         menuModal.style.display = 'flex';  // Show modal

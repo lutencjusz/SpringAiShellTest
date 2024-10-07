@@ -6,6 +6,8 @@ import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponse;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HxRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.InMemoryChatMemory;
@@ -74,11 +76,13 @@ public class SpringAssistantGuiController {
 //        }
         Instant startTime = Instant.now();
         String response = springAssistantService.getChatGptAnswer(message);
+        Parser parser = Parser.builder().build();
+        HtmlRenderer renderer = HtmlRenderer.builder().build();
         Instant endTime = Instant.now();// Zakończ mierzenie czasu
         Duration duration = Duration.between(startTime, endTime);
         long timeElapsed = duration.toMillis();
         log.info("Adres odbiorcy: '{}', Odpowiedź: {}", inetAddress, response);
-        model.addAttribute("response", response);
+        model.addAttribute("response", renderer.render(parser.parse(response)));
         model.addAttribute("message", message);
         model.addAttribute("timeElapsed", String.valueOf(timeElapsed));
         return HtmxResponse.builder()
